@@ -30,4 +30,9 @@ api/
 # Misc
 *.pid
 scratch/
+*.sql
+*.zip
+*.db
+*.db-journal
+*.log
 
