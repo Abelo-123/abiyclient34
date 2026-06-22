@@ -5,7 +5,6 @@ import type {
     CustomField,
 } from './types';
 import { getInitDataRaw, getInitDataString, getTelegramBotId } from './helpers/telegram';
-import { retrieveLaunchParams } from '@telegram-apps/sdk-react';
 
 export const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://paxyoback.infinityfreeapp.com';
 
