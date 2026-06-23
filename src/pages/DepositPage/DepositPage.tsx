@@ -204,12 +204,10 @@ export function DepositPage() {
             const initData = await getInitDataString();
             const userId = user?.id || 'unauth_local_user';
 
-            // Correctly resolve close-popup.html path relative to current URL, propagating the bot username
-            const returnUrlObj = new URL('./close-popup.html', window.location.href);
+            // Redirect directly to the Telegram bot link so the user is instantly returned to the Telegram app
             const currentParams = new URLSearchParams(window.location.search);
             const botParam = currentParams.get('bot') || botUsername || 'eertert_bot';
-            returnUrlObj.searchParams.set('bot', botParam);
-            const returnUrl = returnUrlObj.href;
+            const returnUrl = `https://t.me/${botParam}?startapp=open`;
 
             const backendRes = await fetch(`${NODE_API_URL}/deposit`, {
                 method: 'POST',
