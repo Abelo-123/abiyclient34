@@ -206,7 +206,7 @@ export function DepositPage() {
 
             // Redirect directly to the Telegram bot link so the user is instantly returned to the Telegram app
             const currentParams = new URLSearchParams(window.location.search);
-            const botParam = currentParams.get('bot') || botUsername || 'eertert_bot';
+            const botParam = currentParams.get('bot') || botUsername || 'abiyclient_bot';
             const returnUrl = `https://t.me/${botParam}?startapp=open`;
 
             const backendRes = await fetch(`${NODE_API_URL}/deposit`, {
