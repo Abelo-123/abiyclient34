@@ -204,8 +204,14 @@ export function DepositPage() {
             const initData = await getInitDataString();
             const userId = user?.id || 'unauth_local_user';
 
-            // Correctly resolve close-popup.html path relative to current URL
-            const returnUrl = new URL('./close-popup.html', window.location.href).href;
+            // Correctly resolve close-popup.html path relative to current URL, propagating the bot username if present in search params
+            const returnUrlObj = new URL('./close-popup.html', window.location.href);
+            const currentParams = new URLSearchParams(window.location.search);
+            const botParam = currentParams.get('bot');
+            if (botParam) {
+                returnUrlObj.searchParams.set('bot', botParam);
+            }
+            const returnUrl = returnUrlObj.href;
 
             const backendRes = await fetch(`${NODE_API_URL}/deposit`, {
                 method: 'POST',
