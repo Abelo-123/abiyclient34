@@ -50,13 +50,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             const botUsername = urlParams.get('bot') || 'abiyclient_bot';
             
-            setTimeout(function() {
-                try {
-                    window.location.replace("tg://resolve?domain=" + botUsername + "&startapp=open");
-                } catch (e) {
-                    window.location.replace("https://t.me/" + botUsername + "?startapp=open");
-                }
-            }, 100);
+            try {
+                window.location.replace("tg://resolve?domain=" + botUsername + "&startapp=open");
+            } catch (e) {
+                window.location.replace("https://t.me/" + botUsername + "?startapp=open");
+            }
         }
 
         // Execute immediately
