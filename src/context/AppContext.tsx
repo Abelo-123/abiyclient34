@@ -32,6 +32,7 @@ interface AppState {
     maintenanceMode: boolean;
     userCanOrder: boolean;
     marqueeText: string;
+    botUsername: string;
     activeTab: TabId;
     toasts: ToastMessage[];
     isLoading: boolean;
@@ -96,6 +97,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         userCanOrder: true,
         marqueeText: 'Welcome to Paxyo SMM!',
         topServicesIds: '',
+        botUsername: 'eertert_bot',
     });
 
     const refreshServices = useCallback(async () => {
@@ -208,6 +210,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     userCanOrder: settingsData.userCanOrder !== false,
                     marqueeText: settingsData.marqueeText || 'Welcome to Paxyo SMM!',
                     topServicesIds: settingsData.topServicesIds || '',
+                    botUsername: settingsData.botUsername || 'eertert_bot',
                 });
                 
                 if (settingsData.topServicesIds) {
@@ -479,6 +482,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         maintenanceMode: settings.maintenanceMode,
         userCanOrder: settings.userCanOrder,
         marqueeText: settings.marqueeText,
+        botUsername: settings.botUsername,
         activeTab,
         toasts,
         isLoading,

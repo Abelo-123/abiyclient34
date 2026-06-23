@@ -23,7 +23,7 @@ const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://paxyoback.inf
 type DepositStep = 'amount' | 'verifying' | 'success' | 'error';
 
 export function DepositPage() {
-    const { user, deposits, setBalance, refreshDeposits, showToast } = useApp();
+    const { user, deposits, setBalance, refreshDeposits, showToast, botUsername } = useApp();
     const [amount, setAmount] = useState('');
     const [step, setStep] = useState<DepositStep>('amount');
     const [errorMessage, setErrorMessage] = useState('');
@@ -204,13 +204,11 @@ export function DepositPage() {
             const initData = await getInitDataString();
             const userId = user?.id || 'unauth_local_user';
 
-            // Correctly resolve close-popup.html path relative to current URL, propagating the bot username if present in search params
+            // Correctly resolve close-popup.html path relative to current URL, propagating the bot username
             const returnUrlObj = new URL('./close-popup.html', window.location.href);
             const currentParams = new URLSearchParams(window.location.search);
-            const botParam = currentParams.get('bot');
-            if (botParam) {
-                returnUrlObj.searchParams.set('bot', botParam);
-            }
+            const botParam = currentParams.get('bot') || botUsername || 'eertert_bot';
+            returnUrlObj.searchParams.set('bot', botParam);
             const returnUrl = returnUrlObj.href;
 
             const backendRes = await fetch(`${NODE_API_URL}/deposit`, {
