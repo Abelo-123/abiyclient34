@@ -239,10 +239,21 @@ export async function requestFullscreen(): Promise<void> {
 export function getInitDataUser() {
     try {
         const state = initData.state();
-        return state?.user ?? null;
-    } catch {
-        return null;
-    }
+        if (state?.user) return state.user;
+    } catch {}
+    
+    try {
+        const raw = getInitDataRaw();
+        if (raw) {
+            // Parse query-string format of initData
+            const params = new URLSearchParams(raw);
+            const userStr = params.get('user');
+            if (userStr) {
+                return JSON.parse(userStr);
+            }
+        }
+    } catch {}
+    return null;
 }
 
 /**
