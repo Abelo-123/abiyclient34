@@ -29,12 +29,10 @@ const tgColors = [
 
 export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
     const {
-        user, setUser, chatMessages, setChatMessages, showToast, refreshAlerts
+        user, setUser, showToast, refreshAlerts
     } = useApp();
 
-    const [chatInput, setChatInput] = useState('');
-    const [isSending, setIsSending] = useState(false);
-    const chatContainerRef = useRef<HTMLDivElement>(null);
+
     
     const [referralInput, setReferralInput] = useState('');
     const [isApplyingRef, setIsApplyingRef] = useState(false);
@@ -126,50 +124,15 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
 
 
 
-    const loadMessages = async () => {
-        try {
-            const data = await api.fetchChat();
-            if (data && data.success) {
-                setChatMessages(data.messages);
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    };
-
     useEffect(() => {
-        if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }
-    }, [chatMessages]);
-
-    useEffect(() => {
-        loadMessages();
         refreshAlerts();
         loadReferralStats();
         loadWithdrawalHistory();
         const interval = setInterval(() => {
-            loadMessages();
             refreshAlerts();
         }, 5000);
         return () => clearInterval(interval);
     }, [refreshAlerts, user?.role]);
-
-    const handleSendChat = async () => {
-        if (!chatInput.trim() || isSending) return;
-        setIsSending(true);
-        const text = chatInput.trim();
-        setChatInput('');
-        try {
-            await api.sendChat(text);
-            await loadMessages();
-            showToast('info', 'Message sent to support');
-        } catch (e) {
-            showToast('error', 'Failed to send message');
-        } finally {
-            setIsSending(false);
-        }
-    };
 
     const handleApplyReferral = async () => {
         if (!referralInput.trim() || isApplyingRef) return;
@@ -533,47 +496,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                 </Cell>
             </Section>
 
-            {/* ─── Live Support Chat ─── */}
-            <Section header="Live Support Chat">
-                <div className="support-card glass-card">
-                    <div className="chat-container">
-                        <div className="chat-messages" style={{ height: '200px' }} ref={chatContainerRef}>
-                            {chatMessages.length === 0 ? (
-                                <div className="chat-empty">
-                                    <span>Start a conversation with support</span>
-                                </div>
-                            ) : (
-                                chatMessages.map((msg, i) => (
-                                    <div key={i} style={{
-                                        alignSelf: msg.is_admin ? 'flex-start' : 'flex-end',
-                                        background: msg.is_admin ? 'var(--tg-theme-secondary-bg-color)' : 'var(--tg-theme-button-color)',
-                                        color: msg.is_admin ? 'var(--tg-theme-text-color)' : 'var(--tg-theme-button-text-color)',
-                                        padding: '10px 14px',
-                                        borderRadius: '16px',
-                                        maxWidth: '85%',
-                                        marginBottom: '8px',
-                                        fontSize: '14px'
-                                    }}>
-                                        {msg.message}
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                        <div className="chat-input-row">
-                            <input
-                                className="chat-input"
-                                placeholder="Type a message..."
-                                value={chatInput}
-                                onChange={(e) => setChatInput(e.target.value)}
-                                disabled={isSending}
-                            />
-                            <button className="chat-send-btn" onClick={handleSendChat} disabled={!chatInput.trim()}>
-                                {isSending ? '...' : '➤'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </Section>
+
 
             {/* ─── Promote Telegram Channel ─── */}
             <Section header="Promote">

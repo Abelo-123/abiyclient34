@@ -84,14 +84,6 @@ export interface Alert {
     created_at: string;
 }
 
-export interface ChatMessage {
-    id: number;
-    user_id: string;
-    message: string;
-    is_admin: number | boolean;
-    created_at: string;
-}
-
 export interface UserProfile {
     id: number;
     first_name: string;

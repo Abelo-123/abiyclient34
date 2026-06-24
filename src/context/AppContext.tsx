@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef, useMemo, type ReactNode } from 'react';
-import type { UserProfile, Service, Order, Deposit, Alert, ChatMessage, TabId, ToastMessage, SocialPlatform } from '../types';
+import type { UserProfile, Service, Order, Deposit, Alert, TabId, ToastMessage, SocialPlatform } from '../types';
 import { TOAST_DURATION } from '../constants';
 import {
     isTelegramEnv,
@@ -25,7 +25,6 @@ interface AppState {
     orders: Order[];
     deposits: Deposit[];
     alerts: Alert[];
-    chatMessages: ChatMessage[];
     rateMultiplier: number;
     discountPercent: number;
     holidayName: string;
@@ -48,7 +47,6 @@ interface AppActions {
     setOrders: (orders: Order[]) => void;
     setDeposits: (deposits: Deposit[]) => void;
     setAlerts: (alerts: Alert[]) => void;
-    setChatMessages: (msgs: ChatMessage[]) => void;
     setBalance: (balance: number) => void;
     setIsLoading: (loading: boolean) => void;
     setUnreadAlerts: (count: number) => void;
@@ -84,7 +82,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [selectedService, setSelectedService] = useState<Service | null>(null);
     const [deposits, setDeposits] = useState<Deposit[]>([]);
     const [alerts, setAlerts] = useState<Alert[]>([]);
-    const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
     const [activeTab, setActiveTab] = useState<TabId>('order');
     const [toasts, setToasts] = useState<ToastMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -475,7 +472,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         orders,
         deposits,
         alerts,
-        chatMessages,
         rateMultiplier: settings.rateMultiplier,
         discountPercent: settings.discountPercent,
         holidayName: settings.holidayName,
@@ -495,7 +491,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setOrders,
         setDeposits,
         setAlerts,
-        setChatMessages,
         setBalance,
         setIsLoading,
         setUnreadAlerts,
@@ -507,7 +502,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         refreshAlerts,
     }), [
         user, isTelegramApp, services, recommendedIds, selectedPlatform,
-        selectedCategory, selectedService, orders, deposits, alerts, chatMessages,
+        selectedCategory, selectedService, orders, deposits, alerts,
         settings, activeTab, toasts, isLoading, unreadAlerts,
         handleSetActiveTab, handleSetSelectedPlatform, handleSetSelectedService,
         showToast, removeToast, refreshServices, refreshOrders, refreshDeposits, refreshAlerts, setBalance

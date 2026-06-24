@@ -255,21 +255,7 @@ export async function markAlertsRead(): Promise<{ success: boolean }> {
     return nodeApiFetch('/app/alerts/mark-read', { method: 'POST' });
 }
 
-export async function sendChat(message: string): Promise<{ success: boolean }> {
-    const initData = await getInitDataString();
-    return nodeApiFetch('/chat', {
-        method: 'POST',
-        body: JSON.stringify({ initData, action: 'send', message }),
-    });
-}
 
-export async function fetchChat(): Promise<{ success: boolean; messages: ChatMessage[] }> {
-    const initData = await getInitDataString();
-    return nodeApiFetch('/chat', {
-        method: 'POST',
-        body: JSON.stringify({ initData, action: 'fetch' }),
-    });
-}
 
 export async function heartbeat(): Promise<{ ok: number }> {
     return nodeApiFetch('/app/heartbeat');

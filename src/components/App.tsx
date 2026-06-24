@@ -26,7 +26,7 @@ import { MorePage } from '../pages/MorePage/MorePage';
 
 
 
-import { ChatPanel } from './ChatPanel/ChatPanel';
+
 
 interface AppContentProps {
   themeOverride: 'auto' | 'light' | 'dark';
@@ -38,7 +38,6 @@ function AppContent({ themeOverride, setThemeOverride }: AppContentProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showChat, setShowChat] = useState(false);
 
   // Telegram scroll fix: prevent swipe-to-close
   useEffect(() => {
@@ -73,7 +72,7 @@ function AppContent({ themeOverride, setThemeOverride }: AppContentProps) {
 
   // Combined Back Button logic for Modals and Tabs
   useEffect(() => {
-    const isSubViewOpen = showSearch || showNotifications || showChat;
+    const isSubViewOpen = showSearch || showNotifications;
 
     if (isSubViewOpen || activeTab !== 'order') {
       try { showBackButton(); } catch { /* ignore */ }
@@ -83,8 +82,6 @@ function AppContent({ themeOverride, setThemeOverride }: AppContentProps) {
           setShowSearch(false);
         } else if (showNotifications) {
           setShowNotifications(false);
-        } else if (showChat) {
-          setShowChat(false);
         } else {
           setActiveTab('order');
         }
@@ -97,7 +94,7 @@ function AppContent({ themeOverride, setThemeOverride }: AppContentProps) {
     } else {
       try { hideBackButton(); } catch { /* ignore */ }
     }
-  }, [activeTab, setActiveTab, showSearch, showNotifications, showChat]);
+  }, [activeTab, setActiveTab, showSearch, showNotifications]);
 
   // Settings button via SDK
   useEffect(() => {
@@ -151,9 +148,6 @@ function AppContent({ themeOverride, setThemeOverride }: AppContentProps) {
       )}
       {showNotifications && (
         <NotificationPanel onBack={() => setShowNotifications(false)} />
-      )}
-      {showChat && (
-        <ChatPanel onBack={() => setShowChat(false)} />
       )}
       <ToastContainer />
       <LoadingOverlay visible={isLoading} />
