@@ -4,11 +4,6 @@ import { Section, Cell } from '@telegram-apps/telegram-ui';
 import { PhoneVerification } from '../../components/PhoneVerification/PhoneVerification';
 import * as api from '../../api';
 
-interface MorePageProps {
-    themeOverride: 'auto' | 'light' | 'dark';
-    setThemeOverride: (t: 'auto' | 'light' | 'dark') => void;
-}
-
 const tgColors = [
     { name: 'Background Color', varName: '--tg-theme-bg-color', paramName: 'bg_color', desc: 'Main app background' },
     { name: 'Text Color', varName: '--tg-theme-text-color', paramName: 'text_color', desc: 'Main text color' },
@@ -27,7 +22,7 @@ const tgColors = [
     { name: 'Subtitle Text Color', varName: '--tg-theme-subtitle-text-color', paramName: 'subtitle_text_color', desc: 'Second level detail texts' },
 ];
 
-export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
+export function MorePage() {
     const {
         user, setUser, showToast, refreshAlerts
     } = useApp();

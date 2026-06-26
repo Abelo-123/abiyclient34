@@ -28,12 +28,7 @@ import { MorePage } from '../pages/MorePage/MorePage';
 
 
 
-interface AppContentProps {
-  themeOverride: 'auto' | 'light' | 'dark';
-  setThemeOverride: (t: 'auto' | 'light' | 'dark') => void;
-}
-
-function AppContent({ themeOverride, setThemeOverride }: AppContentProps) {
+function AppContent() {
   const { activeTab, setActiveTab, isLoading, maintenanceMode } = useApp();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showSearch, setShowSearch] = useState(false);
@@ -138,7 +133,7 @@ function AppContent({ themeOverride, setThemeOverride }: AppContentProps) {
         {activeTab === 'order' && <OrderPage />}
         {activeTab === 'history' && <HistoryPage />}
         {activeTab === 'deposit' && <DepositPage />}
-        {activeTab === 'more' && <MorePage themeOverride={themeOverride} setThemeOverride={setThemeOverride} />}
+        {activeTab === 'more' && <MorePage />}
       </div>
       <BottomNav />
       {showSearch && (
@@ -180,7 +175,7 @@ export function App() {
     }
   }, []);
 
-  const [themeOverride, setThemeOverride] = useState<'auto' | 'light' | 'dark'>(
+  const [themeOverride] = useState<'auto' | 'light' | 'dark'>(
     (localStorage.getItem('app-theme') as any) || 'auto'
   );
 
@@ -209,7 +204,7 @@ export function App() {
           appearance={activeAppearance}
           platform={['macos', 'ios'].includes(lp.tgWebAppPlatform) ? 'ios' : 'base'}
         >
-          <AppContent themeOverride={themeOverride} setThemeOverride={setThemeOverride} />
+          <AppContent />
         </AppRoot>
       </AppProvider>
     </QueryClientProvider>
