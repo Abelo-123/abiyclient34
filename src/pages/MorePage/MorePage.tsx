@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Section, Cell } from '@telegram-apps/telegram-ui';
 import { PhoneVerification } from '../../components/PhoneVerification/PhoneVerification';
@@ -10,21 +10,21 @@ interface MorePageProps {
 }
 
 const tgColors = [
-  { name: 'Background Color', varName: '--tg-theme-bg-color', paramName: 'bg_color', desc: 'Main app background' },
-  { name: 'Text Color', varName: '--tg-theme-text-color', paramName: 'text_color', desc: 'Main text color' },
-  { name: 'Hint Color', varName: '--tg-theme-hint-color', paramName: 'hint_color', desc: 'Helper labels, placeholders' },
-  { name: 'Link Color', varName: '--tg-theme-link-color', paramName: 'link_color', desc: 'Hyperlinks' },
-  { name: 'Accent Text Color', varName: '--tg-theme-accent-text-color', paramName: 'accent_text_color', desc: 'Highlighted text/accents' },
-  { name: 'Button Color', varName: '--tg-theme-button-color', paramName: 'button_color', desc: 'Action button background' },
-  { name: 'Button Text Color', varName: '--tg-theme-button-text-color', paramName: 'button_text_color', desc: 'Action button text' },
-  { name: 'Destructive Text Color', varName: '--tg-theme-destructive-text-color', paramName: 'destructive_text_color', desc: 'Error messages & warnings' },
-  { name: 'Secondary Background', varName: '--tg-theme-secondary-bg-color', paramName: 'secondary_bg_color', desc: 'Gutters & section borders' },
-  { name: 'Header Background', varName: '--tg-theme-header-bg-color', paramName: 'header_bg_color', desc: 'Top navigation bar background' },
-  { name: 'Bottom Bar Background', varName: '--tg-theme-bottom-bar-bg-color', paramName: 'bottom_bar_bg_color', desc: 'Bottom tab bar background' },
-  { name: 'Section Background', varName: '--tg-theme-section-bg-color', paramName: 'section_bg_color', desc: 'Lists & card backgrounds' },
-  { name: 'Section Header Text', varName: '--tg-theme-section-header-text-color', paramName: 'section_header_text_color', desc: 'Group headers in lists' },
-  { name: 'Section Separator', varName: '--tg-theme-section-separator-color', paramName: 'section_separator_color', desc: 'Dividers & separators' },
-  { name: 'Subtitle Text Color', varName: '--tg-theme-subtitle-text-color', paramName: 'subtitle_text_color', desc: 'Second level detail texts' },
+    { name: 'Background Color', varName: '--tg-theme-bg-color', paramName: 'bg_color', desc: 'Main app background' },
+    { name: 'Text Color', varName: '--tg-theme-text-color', paramName: 'text_color', desc: 'Main text color' },
+    { name: 'Hint Color', varName: '--tg-theme-hint-color', paramName: 'hint_color', desc: 'Helper labels, placeholders' },
+    { name: 'Link Color', varName: '--tg-theme-link-color', paramName: 'link_color', desc: 'Hyperlinks' },
+    { name: 'Accent Text Color', varName: '--tg-theme-accent-text-color', paramName: 'accent_text_color', desc: 'Highlighted text/accents' },
+    { name: 'Button Color', varName: '--tg-theme-button-color', paramName: 'button_color', desc: 'Action button background' },
+    { name: 'Button Text Color', varName: '--tg-theme-button-text-color', paramName: 'button_text_color', desc: 'Action button text' },
+    { name: 'Destructive Text Color', varName: '--tg-theme-destructive-text-color', paramName: 'destructive_text_color', desc: 'Error messages & warnings' },
+    { name: 'Secondary Background', varName: '--tg-theme-secondary-bg-color', paramName: 'secondary_bg_color', desc: 'Gutters & section borders' },
+    { name: 'Header Background', varName: '--tg-theme-header-bg-color', paramName: 'header_bg_color', desc: 'Top navigation bar background' },
+    { name: 'Bottom Bar Background', varName: '--tg-theme-bottom-bar-bg-color', paramName: 'bottom_bar_bg_color', desc: 'Bottom tab bar background' },
+    { name: 'Section Background', varName: '--tg-theme-section-bg-color', paramName: 'section_bg_color', desc: 'Lists & card backgrounds' },
+    { name: 'Section Header Text', varName: '--tg-theme-section-header-text-color', paramName: 'section_header_text_color', desc: 'Group headers in lists' },
+    { name: 'Section Separator', varName: '--tg-theme-section-separator-color', paramName: 'section_separator_color', desc: 'Dividers & separators' },
+    { name: 'Subtitle Text Color', varName: '--tg-theme-subtitle-text-color', paramName: 'subtitle_text_color', desc: 'Second level detail texts' },
 ];
 
 export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
@@ -33,7 +33,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
     } = useApp();
 
 
-    
+
     const [referralInput, setReferralInput] = useState('');
     const [isApplyingRef, setIsApplyingRef] = useState(false);
 
@@ -173,12 +173,12 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
         <div className="more-page">
             {/* ─── User ID ─── */}
             <Section header="User ID">
-                <Cell 
+                <Cell
                     after={
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <span style={{ color: 'var(--tg-theme-hint-color)', fontWeight: 'bold' }}>#{user?.id || 'N/A'}</span>
-                            <i 
-                                className="fa fa-copy" 
+                            <i
+                                className="fa fa-copy"
                                 style={{ fontSize: '14px', color: 'var(--tg-theme-hint-color)', cursor: 'pointer' }}
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -217,12 +217,12 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                     {/* ─── Invite Friends ─── */}
                     <Section header="Invite Friends">
                         {user?.referral_code && (
-                            <Cell 
+                            <Cell
                                 subtitle="Share this code with your friends!"
                                 after={
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <i 
-                                            className="fa fa-copy" 
+                                        <i
+                                            className="fa fa-copy"
                                             style={{ fontSize: '14px', color: 'var(--tg-theme-hint-color)', cursor: 'pointer' }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
@@ -248,7 +248,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                                     Have a referral code? Enter it below to get a 20% bonus on your first deposit!
                                 </div>
                                 <div style={{ display: 'flex', gap: '8px' }}>
-                                    <input 
+                                    <input
                                         value={referralInput}
                                         onChange={e => setReferralInput(e.target.value)}
                                         placeholder="Enter friend's code"
@@ -262,7 +262,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                                             outline: 'none'
                                         }}
                                     />
-                                    <button 
+                                    <button
                                         onClick={handleApplyReferral}
                                         disabled={isApplyingRef || !referralInput.trim()}
                                         style={{
@@ -284,11 +284,11 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
 
                     {/* ─── Referral Earnings Dashboard ─── */}
                     {user?.refers && user.refers.length > 0 && (
-                        <Section 
+                        <Section
                             header={
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                                     <span>Referral Earnings</span>
-                                    <button 
+                                    <button
                                         onClick={loadReferralStats}
                                         disabled={isLoadingStats}
                                         style={{
@@ -311,9 +311,9 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                             }
                         >
                             <div style={{ padding: '16px', background: 'var(--tg-theme-bg-color)' }}>
-                                <div style={{ 
-                                    display: 'flex', 
-                                    justifyContent: 'space-between', 
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
                                     alignItems: 'center',
                                     background: 'var(--tg-theme-secondary-bg-color)',
                                     padding: '12px',
@@ -364,9 +364,9 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                                     borderTop: '1px dashed var(--tg-theme-secondary-bg-color)',
                                     paddingTop: '16px'
                                 }}>
-                                    <div style={{ 
-                                        display: 'flex', 
-                                        justifyContent: 'space-between', 
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
                                         alignItems: 'center',
                                         background: 'var(--tg-theme-secondary-bg-color)',
                                         padding: '12px',
@@ -419,8 +419,8 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                                                         </div>
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                             <span style={{ fontWeight: 'bold' }}>{Number(item.amount).toFixed(2)} ETB</span>
-                                                            <span style={{ 
-                                                                fontSize: '9px', 
+                                                            <span style={{
+                                                                fontSize: '9px',
                                                                 fontWeight: 'bold',
                                                                 padding: '2px 6px',
                                                                 borderRadius: '4px',
@@ -445,11 +445,11 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
             {/* ─── Appearance ─── */}
             <Section header="Appearance">
                 <Cell subtitle="Choose application appearance">
-                    <div style={{ 
-                        display: 'flex', 
-                        gap: '8px', 
-                        background: 'var(--tg-theme-secondary-bg-color)', 
-                        padding: '6px', 
+                    <div style={{
+                        display: 'flex',
+                        gap: '8px',
+                        background: 'var(--tg-theme-secondary-bg-color)',
+                        padding: '6px',
                         borderRadius: '12px',
                         width: '100%',
                         marginTop: '8px'
@@ -484,7 +484,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                     </div>
                 </Cell>
                 <div style={{ height: '0.5px', background: 'var(--tg-theme-section-separator-color)', marginLeft: '16px' }} />
-                <Cell 
+                <Cell
                     subtitle="View all available Telegram UI variables"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
@@ -500,107 +500,79 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
 
             {/* ─── Promote Telegram Channel ─── */}
             <Section header="Promote">
-                <Cell 
+                <Cell
                     before={
-                        <div style={{ 
-                            width: 44, height: 44, margin: 0, borderRadius: 8, 
-                            background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)', 
-                            display: 'flex', alignItems: 'center', justifyContent: 'center' 
+                        <div style={{
+                            width: 44, height: 44, margin: 0, borderRadius: 8,
+                            background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                             </svg>
                         </div>
                     }
                     subtitle="Join our channel for updates"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        handleOpenLink('https://t.me/paxyo251');
+                        handleOpenLink('https://t.me/ziviop5channel');
                     }}
                 >
-                    @paxyo251
-                </Cell>
-            </Section>
-
-            {/* ─── About Us ─── */}
-            <Section header="About Us">
-                <Cell 
-                    subtitle="Learn more about Paxyo"
-                    onClick={() => {
-                        import('../../helpers/telegram').then(m => m.hapticSelection());
-                        import('sweetalert2').then(Swal => {
-                            Swal.default.fire({
-                                title: 'About Paxyo',
-                                html: `
-                                    <div style="text-align: left; font-size: 14px; line-height: 1.6;">
-                                        <p style="margin-bottom: 12px;">We don't usually speak. We work behind the scenes.</p>
-                                        <p style="margin-bottom: 12px;">We've helped build brands and businesses into successful names in the physical world and now we are doing the same in social media. Many creators, influencers and pages you may know have grown with our support.</p>
-                                        <p style="margin-bottom: 12px;">This tool is part of the Paxyo marketing system now made publicly accessible to help everyone grow at an affordable price.</p>
-                                        <p style="margin-bottom: 12px;">Our goal is simple make your page look active and trusted so your content reaches more people gets noticed and grows faster.</p>
-                                        <p style="margin-bottom: 16px;">Please support the team use the platform responsibly and avoid misuse. We're always open to feedback. 🙏</p>
-                                    </div>
-                                `,
-                                confirmButtonText: 'Got it',
-                                confirmButtonColor: '#7C5CFC',
-                            });
-                        });
-                    }}
-                >
-                    Learn more about us
+                    @Ziviop5channel
                 </Cell>
             </Section>
 
             {/* ─── Contact Us ─── */}
             <Section header="Contact Us">
-                <Cell 
-                    subtitle="Support Email" 
+                <Cell
+                    subtitle="Support Email"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        window.location.href = 'mailto:Contact@paxyo.com';
+                        window.location.href = 'mailto:mesfinabiy3@gmail.com';
                     }}
                 >
-                    Contact@paxyo.com
+                    mesfinabiy3@gmail.com
                 </Cell>
-                <Cell 
-                    subtitle="Business Email" 
+                <Cell
+                    subtitle="Business Email"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        window.location.href = 'mailto:Paxyo251@gmail.com';
+                        window.location.href = 'mailto:mesfinabiy3@gmail.com';
                     }}
                 >
-                    Paxyo251@gmail.com
+                    mesfinabiy3@gmail.com
                 </Cell>
-                <Cell 
-                    subtitle="Phone Number" 
+                <Cell
+                    subtitle="Phone Number"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        window.location.href = 'tel:0986411919';
+                        window.location.href = 'tel:0979722897';
                     }}
                 >
-                    0986411919
+                    0979722897
                 </Cell>
-                <Cell 
+                <Cell
                     before={
-                        <div style={{ 
-                            width: 44, height: 44, margin: 0, borderRadius: 8, 
-                            background: 'rgba(42, 171, 238, 0.1)', 
-                            display: 'flex', alignItems: 'center', justifyContent: 'center' 
+                        <div style={{
+                            width: 44, height: 44, margin: 0, borderRadius: 8,
+                            background: 'rgba(42, 171, 238, 0.1)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2AABEE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
                             </svg>
                         </div>
                     }
-                    subtitle="Click to chat" 
+                    subtitle="Click to chat"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        handleOpenLink('https://t.me/paxyo');
+                        handleOpenLink('https://t.me/Ziviopsupport');
                     }}
                 >
-                    @paxyo
+                    @Ziviopsupport
                 </Cell>
-                <Cell 
-                    subtitle="Location" 
+                <Cell
+                    subtitle="Location"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
                         handleOpenLink('https://share.google/VX1Hfdvnofu6zPcch');
@@ -612,7 +584,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
 
             {/* ─── Terms & Conditions ─── */}
             <div style={{ textAlign: 'center', marginTop: 16, marginBottom: 32 }}>
-                <button 
+                <button
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
                         import('sweetalert2').then(Swal => {
@@ -620,35 +592,35 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                                 title: 'Terms & Conditions',
                                 html: `
                                     <div style="text-align: left; font-size: 13px; line-height: 1.6; max-height: 400px; overflow-y: auto; padding-right: 8px;">
-                                        <p style="margin-bottom: 12px;"><strong>1. Introduction</strong><br>Welcome to Paxyo. By accessing or using our services, you agree to be bound by these Terms & Conditions. These terms apply to all users of the platform. If you do not agree with any part of these terms, you should not use Paxyo.</p>
+                                        <p style="margin-bottom: 12px;"><strong>1. Introduction</strong><br>Welcome to Ziviop. By accessing or using our services, you agree to be bound by these Terms & Conditions. These terms apply to all users of the platform. If you do not agree with any part of these terms, you should not use Zivioppp.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>2. Description of Services</strong><br>Paxyo provides digital marketing and social media engagement services, including likes, views, followers, and other engagement metrics.<br><br>Paxyo operates as a licensed marketing service provider in Ethiopia and is not affiliated with any social media platforms.</p>
+                                        <p style="margin-bottom: 12px;"><strong>2. Description of Services</strong><br>Zivioppp provides digital marketing and social media engagement services, including likes, views, followers, and other engagement metrics.<br><bZZZivioppyo operates as a licensed marketing service provider in Ethiopia and is not affiliated with any social media platforms.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>3. User Responsibilities</strong><br>Users agree to:<br>- Provide accurate and valid order details (links, usernames, etc.)<br>- Ensure accounts or content are public and accessible<br>- Not use Paxyo for illegal, harmful, or misleading purposes<br><br>Paxyo is not responsible for issues caused by incorrect information provided by the user.</p>
+                                        <p style="margin-bottom: 12px;"><strong>3. User Responsibilities</strong><br>Users agree to:<br>- Provide accurate and valid order details (links, usernames, etc.)<br>- Ensure accounts or content are public and accessible<br>- Not use Ziviopppppp for illegal, harmful, or misleading purposes<brZZiviZiviopZiviop is not responsible for issues caused by incorrect information provided by the user.</p>
                                         
                                         <p style="margin-bottom: 12px;"><strong>4. Orders & Processing</strong><br>- Orders begin after payment is successfully completed.<br>- Orders cannot be canceled or modified once processing has started.<br>- Delivery time may vary depending on the service and demand.<br>- Some services may start instantly, while others may take time.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>5. Service Performance Disclaimer</strong><br>- Paxyo does not guarantee permanent results for all services.<br>- Social media platforms may update their systems, which can affect delivery.<br>- Drops in followers, likes, or views may occur over time.</p>
+                                        <p style="margin-bottom: 12px;"><strong>5. Service Performance Disclaimer</strong><br>- Ziviop does not guarantee permanent results for all services.<br>- Social media platforms may update their systems, which can affect delivery.<br>- Drops in followers, likes, or views may occur over time.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>6. Refund & Balance Policy</strong><br>- Paxyo does not provide refunds to bank accounts, mobile money, or external payment methods.<br>- If an order is partially completed, canceled, or fails, the remaining amount will be returned to the user's Paxyo balance.<br>- Users can reuse this balance to place new orders at any time.<br>- Paxyo balance cannot be withdrawn as cash.</p>
+                                        <p style="margin-bottom: 12px;"><strong>6. Refund & Balance Policy</strong><br>- Ziviop does not provide refunds to bank accounts, mobile money, or external payment methods.<br>- If an order is partially completed, canceled, or fails, the remaining amount will be returned to the user's Ziviop balance.<br>- Users can reuse this balance to place new orders at any time.<br>- Zivioppp balance cannot be withdrawn as cash.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>7. Data Privacy & Security</strong><br>- Paxyo respects user privacy and does not sell, rent, or share user data with third parties.<br>- User information is stored using secure systems and modern encryption practices to protect against unauthorized access.<br>- Sensitive data is handled with strict internal controls and is only accessible when necessary for system operation or support.<br>- Paxyo team members do not access personal user data unless required to resolve a support issue.<br>- We continuously improve our security measures to keep user data safe.</p>
+                                        <p style="margin-bottom: 12px;"><strong>7. Data Privacy & Security</strong><br>- Ziviopppppppppppppppppp respects user privacy and does not sell, rent, or share user data with third parties.<br>- User information is stored using secure systems and modern encryption practices to protect against unauthorized access.<br>- Sensitive data is handled with strict internal controls and is only accessible when necessary for system operation or support.<br>- Zivioppp team members do not access personal user data unless required to resolve a support issue.<br>- We continuously improve our security measures to keep user data safe.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>8. Pricing & Payments</strong><br>- All prices are displayed inside the platform and may change at any time.<br>- Users are responsible for reviewing service details before placing orders.<br>- Paxyo is not responsible for issues caused by third-party payment providers.</p>
+                                        <p style="margin-bottom: 12px;"><strong>8. Pricing & Payments</strong><br>- All prices are displayed inside the platform and may change at any time.<br>- Users are responsible for reviewing service details before placing orders.<br>- Ziviopppppppppppp is not responsible for issues caused by third-party payment providers.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>9. Account & Security</strong><br>- Users are responsible for maintaining the security of their accounts.<br>- Paxyo is not liable for unauthorized access due to user negligence.</p>
+                                        <p style="margin-bottom: 12px;"><strong>9. Account & Security</strong><br>- Users are responsible for maintaining the security of their accounts.<br>- Ziviopppp is not liable for unauthorized access due to user negligence.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>10. Prohibited Activities</strong><br>Users must not:<br>- Use Paxyo for fraudulent or deceptive purposes<br>- Attempt to exploit or harm the system<br>- Use automation or bots to abuse services<br><br>Violations may result in account suspension.</p>
+                                        <p style="margin-bottom: 12px;"><strong>10. Prohibited Activities</strong><br>Users must not:<br>- Use Zivioppppppppp for fraudulent or deceptive purposes<br>- Attempt to exploit or harm the system<br>- Use automation or bots to abuse services<br><br>Violations may result in account suspension.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>11. Account Suspension & Termination</strong><br>Paxyo reserves the right to suspend or terminate accounts that violate these terms or engage in suspicious activity.<br><br>No refunds will be provided in such cases.</p>
+                                        <p style="margin-bottom: 12px;"><strong>11. Account Suspension & Termination</strong><br>Ziviopppppp reserves the right to suspend or terminate accounts that violate these terms or engage in suspicious activity.<br><br>No refunds will be provided in such cases.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>12. Limitation of Liability</strong><br>Paxyo is not responsible for:<br>- Any loss of profits, data, or business opportunities<br>- Social media account restrictions or bans<br>- Any indirect damages resulting from service use<br><br>All services are used at the user's own risk.</p>
+                                        <p style="margin-bottom: 12px;"><strong>12. Limitation of Liability</strong><br>Ziviopppppppppppppppppppppppppp is not responsible for:<br>- Any loss of profits, data, or business opportunities<br>- Social media account restrictions or bans<br>- Any indirect damages resulting from service use<br><br>All services are used at the user's own risk.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>13. Service Availability</strong><br>Paxyo aims to provide continuous service but does not guarantee uninterrupted operation. Temporary downtime may occur due to maintenance or technical issues.</p>
+                                        <p style="margin-bottom: 12px;"><strong>13. Service Availability</strong><br>Ziviop aims to provide continuous service but does not guarantee uninterrupted operation. Temporary downtime may occur due to maintenance or technical issues.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>14. Contact & Support</strong><br>Paxyo is a licensed marketing company in Ethiopia. Users can contact us at any time through our official support channels.</p>
+                                        <p style="margin-bottom: 12px;"><strong>14. Contact & Support</strong><br>Ziviop is a licensed marketing company in Ethiopia. Users can contact us at any time through our official support channels.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>15. Changes to Terms</strong><br>Paxyo may update these Terms & Conditions at any time. Continued use of the platform means you accept any changes.</p>
+                                        <p style="margin-bottom: 12px;"><strong>15. Changes to Terms</strong><br>Zivioppppppppppppp may update these Terms & Conditions at any time. Continued use of the platform means you accept any changes.</p>
                                         
                                         <p style="margin-bottom: 0;"><em>Last updated: March 2026</em></p>
                                     </div>
@@ -694,10 +666,10 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                         border: '1px solid rgba(255,255,255,0.08)'
                     }}>
                         <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: 'bold' }}>Withdraw Commission</h3>
-                        
+
                         <div style={{ marginBottom: '12px', textAlign: 'left' }}>
                             <label style={{ fontSize: '12px', color: 'var(--tg-theme-hint-color)', display: 'block', marginBottom: '4px' }}>Full Name</label>
-                            <input 
+                            <input
                                 value={fullName}
                                 onChange={e => setFullName(e.target.value)}
                                 placeholder="Enter bank account name"
@@ -707,7 +679,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
 
                         <div style={{ marginBottom: '12px', textAlign: 'left' }}>
                             <label style={{ fontSize: '12px', color: 'var(--tg-theme-hint-color)', display: 'block', marginBottom: '4px' }}>Bank Name</label>
-                            <input 
+                            <input
                                 value={bankName}
                                 onChange={e => setBankName(e.target.value)}
                                 placeholder="e.g. Commercial Bank"
@@ -717,7 +689,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
 
                         <div style={{ marginBottom: '12px', textAlign: 'left' }}>
                             <label style={{ fontSize: '12px', color: 'var(--tg-theme-hint-color)', display: 'block', marginBottom: '4px' }}>Account Number</label>
-                            <input 
+                            <input
                                 value={accountNumber}
                                 onChange={e => setAccountNumber(e.target.value)}
                                 placeholder="Enter account number"
@@ -727,7 +699,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
 
                         <div style={{ marginBottom: '20px', textAlign: 'left' }}>
                             <label style={{ fontSize: '12px', color: 'var(--tg-theme-hint-color)', display: 'block', marginBottom: '4px' }}>Amount (ETB)</label>
-                            <input 
+                            <input
                                 type="number"
                                 value={withdrawAmount}
                                 onChange={e => setWithdrawAmount(e.target.value)}
@@ -740,13 +712,13 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                         </div>
 
                         <div style={{ display: 'flex', gap: '8px' }}>
-                            <button 
+                            <button
                                 onClick={() => setShowWithdrawModal(false)}
                                 style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--tg-theme-hint-color)', background: 'transparent', color: 'var(--tg-theme-text-color)', fontWeight: 'bold' }}
                             >
                                 Cancel
                             </button>
-                            <button 
+                            <button
                                 onClick={handleRequestWithdrawal}
                                 disabled={isRequestingWithdrawal || !fullName.trim() || !bankName.trim() || !accountNumber.trim() || !withdrawAmount}
                                 style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', background: 'var(--tg-theme-button-color)', color: 'var(--tg-theme-button-text-color)', fontWeight: 'bold', opacity: (isRequestingWithdrawal || !fullName.trim() || !bankName.trim() || !accountNumber.trim() || !withdrawAmount) ? 0.6 : 1 }}
@@ -783,7 +755,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexShrink: 0 }}>
                             <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>Telegram Theme Colors</h3>
-                            <button 
+                            <button
                                 onClick={() => {
                                     import('../../helpers/telegram').then(m => m.hapticSelection());
                                     setShowColorsModal(false);
@@ -805,14 +777,14 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                                 ✕
                             </button>
                         </div>
-                        
+
                         <p style={{ fontSize: '12px', color: 'var(--tg-theme-hint-color, #8b8baf)', marginBottom: '16px', lineHeight: '1.4', flexShrink: 0 }}>
                             These variables are automatically set by the Telegram client. Click any item to copy its CSS custom property.
                         </p>
 
                         <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '4px' }}>
                             {tgColors.map((color, idx) => (
-                                <div 
+                                <div
                                     key={idx}
                                     onClick={() => {
                                         import('../../helpers/telegram').then(m => m.hapticSelection());

@@ -1,10 +1,10 @@
 import type {
-    Service, Deposit, ChatMessage,
+    Service, Deposit,
     AuthResponse, OrderResponse, OrdersListResponse,
     DepositResponse, AlertsResponse, StatusSyncResponse,
     CustomField,
 } from './types';
-import { getInitDataRaw, getInitDataString, getTelegramBotId } from './helpers/telegram';
+import { getInitDataRaw, getTelegramBotId } from './helpers/telegram';
 
 export const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com';
 

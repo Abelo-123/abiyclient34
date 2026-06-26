@@ -1,4 +1,4 @@
-import type { Service, Order, Deposit, Alert, ChatMessage, UserProfile } from '../types';
+import type { Service, Order, Deposit, Alert, UserProfile } from '../types';
 
 // ─── Mock User ────────────────────────────────────────────────
 export const MOCK_USER: UserProfile = {
@@ -54,10 +54,6 @@ export const MOCK_ALERTS: Alert[] = [
     { id: 2, message: '✅ Your order #88001 has been completed!', is_read: true, created_at: '2026-02-10T14:00:00Z' },
 ];
 
-// ─── Mock Chat ────────────────────────────────────────────────
-export const MOCK_CHAT: ChatMessage[] = [
-    { id: 1, user_id: 'admin', message: 'Hello! Welcome to Paxyo support. How can I help you?', is_admin: 1, created_at: '2026-02-11T08:00:00Z' },
-];
 
 // ─── Mock Settings ────────────────────────────────────────────
 export const MOCK_SETTINGS = {
