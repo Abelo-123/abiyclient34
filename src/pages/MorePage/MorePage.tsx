@@ -442,60 +442,6 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                 </>
             )}
 
-            {/* ─── Appearance ─── */}
-            <Section header="Appearance">
-                <Cell subtitle="Choose application appearance">
-                    <div style={{
-                        display: 'flex',
-                        gap: '8px',
-                        background: 'var(--tg-theme-secondary-bg-color)',
-                        padding: '6px',
-                        borderRadius: '12px',
-                        width: '100%',
-                        marginTop: '8px'
-                    }}>
-                        {['light', 'dark', 'auto'].map((t) => (
-                            <button
-                                key={t}
-                                onClick={() => {
-                                    import('../../helpers/telegram').then(m => {
-                                        m.hapticSelection();
-                                        m.setTheme(t === 'auto' ? 'system' : t as 'light' | 'dark');
-                                    });
-                                    setThemeOverride(t as any);
-                                    localStorage.setItem('app-theme', t);
-                                }}
-                                style={{
-                                    flex: 1,
-                                    padding: '8px 0',
-                                    background: themeOverride === t ? 'var(--tg-theme-bg-color)' : 'transparent',
-                                    color: themeOverride === t ? 'var(--tg-theme-text-color)' : 'var(--tg-theme-hint-color)',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    fontWeight: themeOverride === t ? 600 : 500,
-                                    boxShadow: themeOverride === t ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
-                                    transition: 'all 0.2s ease',
-                                    textTransform: 'capitalize'
-                                }}
-                            >
-                                {t}
-                            </button>
-                        ))}
-                    </div>
-                </Cell>
-                <div style={{ height: '0.5px', background: 'var(--tg-theme-section-separator-color)', marginLeft: '16px' }} />
-                <Cell
-                    subtitle="View all available Telegram UI variables"
-                    onClick={() => {
-                        import('../../helpers/telegram').then(m => m.hapticSelection());
-                        setShowColorsModal(true);
-                    }}
-                    after={<span style={{ color: 'var(--tg-theme-hint-color)', fontSize: '16px', fontWeight: 'bold' }}>›</span>}
-                >
-                    Built-in Theme Colors
-                </Cell>
-            </Section>
-
 
 
             {/* ─── Promote Telegram Channel ─── */}
