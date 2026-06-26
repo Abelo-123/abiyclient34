@@ -524,15 +524,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
 
             {/* ─── Contact Us ─── */}
             <Section header="Contact Us">
-                <Cell
-                    subtitle="Support Email"
-                    onClick={() => {
-                        import('../../helpers/telegram').then(m => m.hapticSelection());
-                        window.location.href = 'mailto:mesfinabiy3@gmail.com';
-                    }}
-                >
-                    mesfinabiy3@gmail.com
-                </Cell>
+
                 <Cell
                     subtitle="Business Email"
                     onClick={() => {
@@ -571,15 +563,7 @@ export function MorePage({ themeOverride, setThemeOverride }: MorePageProps) {
                 >
                     @Ziviopsupport
                 </Cell>
-                <Cell
-                    subtitle="Location"
-                    onClick={() => {
-                        import('../../helpers/telegram').then(m => m.hapticSelection());
-                        handleOpenLink('https://share.google/VX1Hfdvnofu6zPcch');
-                    }}
-                >
-                    View Office Location 📍
-                </Cell>
+
             </Section>
 
             {/* ─── Terms & Conditions ─── */}
