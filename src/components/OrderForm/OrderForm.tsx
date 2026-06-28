@@ -222,6 +222,9 @@ export const OrderForm = forwardRef<OrderFormHandle, OrderFormProps>(function Or
                 queryClient.setQueryData([ 'orders' ], (old: any[] = []) => 
                     old.map(o => o.isOptimistic ? { ...o, id: response.order_id, api_order_id: response.order_id, isOptimistic: false } : o)
                 );
+                if (response.new_balance !== undefined) {
+                    setBalance(response.new_balance);
+                }
                 showToast('success', response.verified ? 'Order confirmed!' : 'Order processing.');
                 hapticImpact('heavy');
                 hapticNotification('success');
