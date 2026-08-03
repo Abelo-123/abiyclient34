@@ -32,6 +32,8 @@ async function migrate() {
         // Add new columns if they don't exist
         const newColumns = [
             { name: 'username', sql: 'ALTER TABLE auth ADD COLUMN username VARCHAR(255) AFTER last_name' },
+            { name: 'photo_url', sql: 'ALTER TABLE auth ADD COLUMN photo_url TEXT AFTER username' },
+            { name: 'refers', sql: 'ALTER TABLE auth ADD COLUMN refers TEXT AFTER referred_by' },
             { name: 'last_deposit', sql: 'ALTER TABLE auth ADD COLUMN last_deposit DATETIME AFTER username' },
             { name: 'last_order', sql: 'ALTER TABLE auth ADD COLUMN last_order DATETIME AFTER last_deposit' },
         ];
