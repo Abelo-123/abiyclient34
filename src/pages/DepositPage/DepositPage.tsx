@@ -206,7 +206,7 @@ export function DepositPage() {
 
             // Redirect to close-popup.html which immediately triggers a tg://resolve deep link back to the Telegram app (bypassing the t.me landing page)
             const currentParams = new URLSearchParams(window.location.search);
-            const botParam = currentParams.get('bot') || botUsername || 'abiyclient_bot';
+            const botParam = currentParams.get('bot') || botUsername || 'testtyer_bot';
             const baseUrl = window.location.href.split('#')[0].split('?')[0];
             const returnUrlObj = new URL('./close-popup.html', baseUrl);
             returnUrlObj.searchParams.set('bot', botParam);

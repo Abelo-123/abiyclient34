@@ -94,7 +94,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         userCanOrder: true,
         marqueeText: 'Welcome to Paxyo SMM!',
         topServicesIds: '',
-        botUsername: 'abiyclient_bot',
+        botUsername: 'testtyer_bot',
     });
 
     const refreshServices = useCallback(async () => {
@@ -207,7 +207,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     userCanOrder: settingsData.userCanOrder !== false,
                     marqueeText: settingsData.marqueeText || 'Welcome to Paxyo SMM!',
                     topServicesIds: settingsData.topServicesIds || '',
-                    botUsername: settingsData.botUsername || 'abiyclient_bot',
+                    botUsername: settingsData.botUsername || 'testtyer_bot',
                 });
                 
                 if (settingsData.topServicesIds) {

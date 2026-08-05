@@ -334,7 +334,7 @@ export async function getSettings(useCache = true): Promise<AppSettings> {
             userCanOrder: true,
             marqueeText: 'Welcome to Paxyo SMM!',
             topServicesIds: '',
-            botUsername: 'abiyclient_bot',
+            botUsername: 'testtyer_bot',
         };
     }
 }
