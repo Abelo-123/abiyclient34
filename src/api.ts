@@ -334,7 +334,7 @@ export async function getSettings(useCache = true): Promise<AppSettings> {
             userCanOrder: true,
             marqueeText: 'Welcome to Primora SMM!',
             topServicesIds: '',
-            botUsername: 'testtyer_bot',
+            botUsername: 'Primora444_bot',
         };
     }
 }

@@ -94,7 +94,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         userCanOrder: true,
         marqueeText: 'Welcome to Primora SMM!',
         topServicesIds: '',
-        botUsername: 'testtyer_bot',
+        botUsername: 'Primora444_bot',
     });
 
     const refreshServices = useCallback(async () => {
@@ -207,7 +207,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     userCanOrder: settingsData.userCanOrder !== false,
                     marqueeText: settingsData.marqueeText || 'Welcome to Primora SMM!',
                     topServicesIds: settingsData.topServicesIds || '',
-                    botUsername: settingsData.botUsername || 'testtyer_bot',
+                    botUsername: settingsData.botUsername || 'Primora444_bot',
                 });
                 
                 if (settingsData.topServicesIds) {

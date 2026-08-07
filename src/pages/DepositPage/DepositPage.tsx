@@ -204,8 +204,8 @@ export function DepositPage() {
             const initData = await getInitDataString();
             const userId = user?.id || 'unauth_local_user';
 
-            // Always use testtyer_bot as the return bot regardless of Telegram launch URL params
-            const botParam = botUsername || 'testtyer_bot';
+            // Always use Primora444_bot as the return bot regardless of Telegram launch URL params
+            const botParam = botUsername || 'Primora444_bot';
             const baseUrl = window.location.href.split('#')[0].split('?')[0];
             const returnUrlObj = new URL('./close-popup.html', baseUrl);
             returnUrlObj.searchParams.set('bot', botParam);
