@@ -110,10 +110,10 @@ export async function authenticateTelegram(initData: string): Promise<AuthRespon
     });
 }
 
-const SERVICES_CACHE_KEY = 'paxyo_services_cache';
-const SERVICES_TIMESTAMP_KEY = 'paxyo_services_timestamp';
-const SETTINGS_CACHE_KEY = 'paxyo_settings_cache';
-const SETTINGS_TIMESTAMP_KEY = 'paxyo_settings_timestamp';
+const SERVICES_CACHE_KEY = 'primora_services_cache';
+const SERVICES_TIMESTAMP_KEY = 'primora_services_timestamp';
+const SETTINGS_CACHE_KEY = 'primora_settings_cache';
+const SETTINGS_TIMESTAMP_KEY = 'primora_settings_timestamp';
 const CACHE_DURATION = 5 * 60 * 1000;
 const SETTINGS_CACHE_DURATION = 15 * 60 * 1000;
 
@@ -332,7 +332,7 @@ export async function getSettings(useCache = true): Promise<AppSettings> {
             holidayName: '',
             maintenanceMode: false,
             userCanOrder: true,
-            marqueeText: 'Welcome to Paxyo SMM!',
+            marqueeText: 'Welcome to Primora SMM!',
             topServicesIds: '',
             botUsername: 'testtyer_bot',
         };

@@ -264,6 +264,7 @@ mark { background:rgba(124,92,252,0.3); color:var(--tg-theme-text-color,#f0f0f5)
 /* ═══════════════════════════════════════════════════════
    SECTION HEADER
    ═══════════════════════════════════════════════════════ */
+.primora-section-header,
 .paxyo-section-header {
   padding:var(--gap-lg) var(--gap-lg) var(--gap-sm);
   font-size:12px; font-weight:600;

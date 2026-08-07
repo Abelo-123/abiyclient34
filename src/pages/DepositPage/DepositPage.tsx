@@ -335,7 +335,7 @@ export function DepositPage() {
             {/* ─── Amount Input Section ─── */}
             {step === 'amount' && (
                 <>
-                    <div className="paxyo-section-header">
+                    <div className="primora-section-header">
                         <span>AMOUNT TO ADD</span>
                     </div>
                     <div className="deposit-input-group">
@@ -575,7 +575,7 @@ export function DepositPage() {
             )}
 
             {/* ─── Recent Deposits ─── */}
-            <div ref={recentDepositsRef} className="paxyo-section-header" style={{ marginTop: 24 }}>Recent Deposits</div>
+            <div ref={recentDepositsRef} className="primora-section-header" style={{ marginTop: 24 }}>Recent Deposits</div>
             {recentDeposits.length === 0 ? (
                 <div className="empty-state">
                     <div className="empty-state__icon">💸</div>

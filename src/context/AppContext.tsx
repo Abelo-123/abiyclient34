@@ -92,7 +92,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         holidayName: '',
         maintenanceMode: false,
         userCanOrder: true,
-        marqueeText: 'Welcome to Paxyo SMM!',
+        marqueeText: 'Welcome to Primora SMM!',
         topServicesIds: '',
         botUsername: 'testtyer_bot',
     });
@@ -196,8 +196,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
             // Load settings (independent of services) - always fetch fresh
             try {
-                localStorage.removeItem('paxyo_settings_cache');
-                localStorage.removeItem('paxyo_settings_timestamp');
+                localStorage.removeItem('primora_settings_cache');
+                localStorage.removeItem('primora_settings_timestamp');
                 const settingsData = await api.getSettings(false);
                 _setSettings({
                     rateMultiplier: settingsData.rateMultiplier || 1,
@@ -205,7 +205,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     holidayName: settingsData.holidayName || '',
                     maintenanceMode: settingsData.maintenanceMode || false,
                     userCanOrder: settingsData.userCanOrder !== false,
-                    marqueeText: settingsData.marqueeText || 'Welcome to Paxyo SMM!',
+                    marqueeText: settingsData.marqueeText || 'Welcome to Primora SMM!',
                     topServicesIds: settingsData.topServicesIds || '',
                     botUsername: settingsData.botUsername || 'testtyer_bot',
                 });

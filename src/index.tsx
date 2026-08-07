@@ -24,7 +24,7 @@ try {
     launchParams = retrieveLaunchParams();
   } catch (err) {
     // Try to load cached launch params from sessionStorage
-    const cached = sessionStorage.getItem('paxyo:launch_params');
+    const cached = sessionStorage.getItem('primora:launch_params');
     if (cached) {
       const parsedParams = new URLSearchParams(cached);
       // Mock the environment with cached parameters

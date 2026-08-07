@@ -456,10 +456,10 @@ export function MorePage() {
                     subtitle="Join our channel for updates"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        handleOpenLink('https://t.me/ziviop5channel');
+                        handleOpenLink('https://t.me/primorasmm');
                     }}
                 >
-                    @Ziviop5channel
+                    @Primorasmm
                 </Cell>
             </Section>
 
@@ -499,10 +499,10 @@ export function MorePage() {
                     subtitle="Click to chat"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        handleOpenLink('https://t.me/Ziviopsupport');
+                        handleOpenLink('https://t.me/Primorasupport');
                     }}
                 >
-                    @Ziviopsupport
+                    @Primorasupport
                 </Cell>
 
             </Section>
@@ -517,35 +517,35 @@ export function MorePage() {
                                 title: 'Terms & Conditions',
                                 html: `
                                     <div style="text-align: left; font-size: 13px; line-height: 1.6; max-height: 400px; overflow-y: auto; padding-right: 8px;">
-                                        <p style="margin-bottom: 12px;"><strong>1. Introduction</strong><br>Welcome to Ziviop. By accessing or using our services, you agree to be bound by these Terms & Conditions. These terms apply to all users of the platform. If you do not agree with any part of these terms, you should not use Zivioppp.</p>
+                                        <p style="margin-bottom: 12px;"><strong>1. Introduction</strong><br>Welcome to Primora. By accessing or using our services, you agree to be bound by these Terms & Conditions. These terms apply to all users of the platform. If you do not agree with any part of these terms, you should not use Primora.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>2. Description of Services</strong><br>Zivioppp provides digital marketing and social media engagement services, including likes, views, followers, and other engagement metrics.<br><bZZZivioppyo operates as a licensed marketing service provider in Ethiopia and is not affiliated with any social media platforms.</p>
+                                        <p style="margin-bottom: 12px;"><strong>2. Description of Services</strong><br>Primora provides digital marketing and social media engagement services, including likes, views, followers, and other engagement metrics.<br>Primora operates as a licensed marketing service provider in Ethiopia and is not affiliated with any social media platforms.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>3. User Responsibilities</strong><br>Users agree to:<br>- Provide accurate and valid order details (links, usernames, etc.)<br>- Ensure accounts or content are public and accessible<br>- Not use Ziviopppppp for illegal, harmful, or misleading purposes<brZZiviZiviopZiviop is not responsible for issues caused by incorrect information provided by the user.</p>
+                                        <p style="margin-bottom: 12px;"><strong>3. User Responsibilities</strong><br>Users agree to:<br>- Provide accurate and valid order details (links, usernames, etc.)<br>- Ensure accounts or content are public and accessible<br>- Not use Primora for illegal, harmful, or misleading purposes.<br>Primora is not responsible for issues caused by incorrect information provided by the user.</p>
                                         
                                         <p style="margin-bottom: 12px;"><strong>4. Orders & Processing</strong><br>- Orders begin after payment is successfully completed.<br>- Orders cannot be canceled or modified once processing has started.<br>- Delivery time may vary depending on the service and demand.<br>- Some services may start instantly, while others may take time.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>5. Service Performance Disclaimer</strong><br>- Ziviop does not guarantee permanent results for all services.<br>- Social media platforms may update their systems, which can affect delivery.<br>- Drops in followers, likes, or views may occur over time.</p>
+                                        <p style="margin-bottom: 12px;"><strong>5. Service Performance Disclaimer</strong><br>- Primora does not guarantee permanent results for all services.<br>- Social media platforms may update their systems, which can affect delivery.<br>- Drops in followers, likes, or views may occur over time.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>6. Refund & Balance Policy</strong><br>- Ziviop does not provide refunds to bank accounts, mobile money, or external payment methods.<br>- If an order is partially completed, canceled, or fails, the remaining amount will be returned to the user's Ziviop balance.<br>- Users can reuse this balance to place new orders at any time.<br>- Zivioppp balance cannot be withdrawn as cash.</p>
+                                        <p style="margin-bottom: 12px;"><strong>6. Refund & Balance Policy</strong><br>- Primora does not provide refunds to bank accounts, mobile money, or external payment methods.<br>- If an order is partially completed, canceled, or fails, the remaining amount will be returned to the user's Primora balance.<br>- Users can reuse this balance to place new orders at any time.<br>- Primora balance cannot be withdrawn as cash.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>7. Data Privacy & Security</strong><br>- Ziviopppppppppppppppppp respects user privacy and does not sell, rent, or share user data with third parties.<br>- User information is stored using secure systems and modern encryption practices to protect against unauthorized access.<br>- Sensitive data is handled with strict internal controls and is only accessible when necessary for system operation or support.<br>- Zivioppp team members do not access personal user data unless required to resolve a support issue.<br>- We continuously improve our security measures to keep user data safe.</p>
+                                        <p style="margin-bottom: 12px;"><strong>7. Data Privacy & Security</strong><br>- Primora respects user privacy and does not sell, rent, or share user data with third parties.<br>- User information is stored using secure systems and modern encryption practices to protect against unauthorized access.<br>- Sensitive data is handled with strict internal controls and is only accessible when necessary for system operation or support.<br>- Primora team members do not access personal user data unless required to resolve a support issue.<br>- We continuously improve our security measures to keep user data safe.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>8. Pricing & Payments</strong><br>- All prices are displayed inside the platform and may change at any time.<br>- Users are responsible for reviewing service details before placing orders.<br>- Ziviopppppppppppp is not responsible for issues caused by third-party payment providers.</p>
+                                        <p style="margin-bottom: 12px;"><strong>8. Pricing & Payments</strong><br>- All prices are displayed inside the platform and may change at any time.<br>- Users are responsible for reviewing service details before placing orders.<br>- Primora is not responsible for issues caused by third-party payment providers.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>9. Account & Security</strong><br>- Users are responsible for maintaining the security of their accounts.<br>- Ziviopppp is not liable for unauthorized access due to user negligence.</p>
+                                        <p style="margin-bottom: 12px;"><strong>9. Account & Security</strong><br>- Users are responsible for maintaining the security of their accounts.<br>- Primora is not liable for unauthorized access due to user negligence.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>10. Prohibited Activities</strong><br>Users must not:<br>- Use Zivioppppppppp for fraudulent or deceptive purposes<br>- Attempt to exploit or harm the system<br>- Use automation or bots to abuse services<br><br>Violations may result in account suspension.</p>
+                                        <p style="margin-bottom: 12px;"><strong>10. Prohibited Activities</strong><br>Users must not:<br>- Use Primora for fraudulent or deceptive purposes<br>- Attempt to exploit or harm the system<br>- Use automation or bots to abuse services<br><br>Violations may result in account suspension.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>11. Account Suspension & Termination</strong><br>Ziviopppppp reserves the right to suspend or terminate accounts that violate these terms or engage in suspicious activity.<br><br>No refunds will be provided in such cases.</p>
+                                        <p style="margin-bottom: 12px;"><strong>11. Account Suspension & Termination</strong><br>Primora reserves the right to suspend or terminate accounts that violate these terms or engage in suspicious activity.<br><br>No refunds will be provided in such cases.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>12. Limitation of Liability</strong><br>Ziviopppppppppppppppppppppppppp is not responsible for:<br>- Any loss of profits, data, or business opportunities<br>- Social media account restrictions or bans<br>- Any indirect damages resulting from service use<br><br>All services are used at the user's own risk.</p>
+                                        <p style="margin-bottom: 12px;"><strong>12. Limitation of Liability</strong><br>Primora is not responsible for:<br>- Any loss of profits, data, or business opportunities<br>- Social media account restrictions or bans<br>- Any indirect damages resulting from service use<br><br>All services are used at the user's own risk.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>13. Service Availability</strong><br>Ziviop aims to provide continuous service but does not guarantee uninterrupted operation. Temporary downtime may occur due to maintenance or technical issues.</p>
+                                        <p style="margin-bottom: 12px;"><strong>13. Service Availability</strong><br>Primora aims to provide continuous service but does not guarantee uninterrupted operation. Temporary downtime may occur due to maintenance or technical issues.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>14. Contact & Support</strong><br>Ziviop is a licensed marketing company in Ethiopia. Users can contact us at any time through our official support channels.</p>
+                                        <p style="margin-bottom: 12px;"><strong>14. Contact & Support</strong><br>Primora is a licensed marketing company in Ethiopia. Users can contact us at any time through our official support channels.</p>
                                         
-                                        <p style="margin-bottom: 12px;"><strong>15. Changes to Terms</strong><br>Zivioppppppppppppp may update these Terms & Conditions at any time. Continued use of the platform means you accept any changes.</p>
+                                        <p style="margin-bottom: 12px;"><strong>15. Changes to Terms</strong><br>Primora may update these Terms & Conditions at any time. Continued use of the platform means you accept any changes.</p>
                                         
                                         <p style="margin-bottom: 0;"><em>Last updated: March 2026</em></p>
                                     </div>

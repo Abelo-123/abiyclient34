@@ -168,7 +168,7 @@ export function App() {
     try {
       const launchParams = window.location.search + window.location.hash;
       if (launchParams.includes('tgWebAppData')) {
-        sessionStorage.setItem('paxyo:launch_params', launchParams);
+        sessionStorage.setItem('primora:launch_params', launchParams);
       }
     } catch (e) {
       console.error('Failed to cache launch params:', e);

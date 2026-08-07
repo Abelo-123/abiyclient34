@@ -50,7 +50,7 @@ export const MOCK_DEPOSITS: Deposit[] = [
 
 // ─── Mock Alerts ──────────────────────────────────────────────
 export const MOCK_ALERTS: Alert[] = [
-    { id: 1, message: '🎉 Welcome to Paxyo SMM! Explore our services and get started.', is_read: false, created_at: '2026-02-11T08:00:00Z' },
+    { id: 1, message: '🎉 Welcome to Primora SMM! Explore our services and get started.', is_read: false, created_at: '2026-02-11T08:00:00Z' },
     { id: 2, message: '✅ Your order #88001 has been completed!', is_read: true, created_at: '2026-02-10T14:00:00Z' },
 ];
 
