@@ -1,5 +1,4 @@
 import { hapticSelection } from '../../helpers/telegram';
-import { Button } from '@telegram-apps/telegram-ui';
 import type { SocialPlatform } from '../../types';
 
 interface Props {
@@ -84,9 +83,9 @@ export function PlatformGrid({ selectedPlatform, onSelect }: Props) {
     return (
         <div className="platform-grid">
             {DISPLAY_PLATFORMS.map(p => (
-                <Button
+                <button
+                    type="button"
                     key={p.id}
-                    mode="plain"
                     className={`platform-card${selectedPlatform === p.id ? ' platform-card--active' : ''}`}
                     onClick={() => {
                         hapticSelection();
@@ -95,7 +94,7 @@ export function PlatformGrid({ selectedPlatform, onSelect }: Props) {
                 >
                     <div className="platform-card__icon-wrapper">{p.icon}</div>
                     <span className="platform-card__label">{p.label}</span>
-                </Button>
+                </button>
             ))}
         </div>
     );

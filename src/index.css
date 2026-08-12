@@ -250,14 +250,19 @@ mark { background:rgba(0,245,212,0.25); color:#ffffff; border-radius:2px; paddin
 .platform-card {
     background: transparent !important;
     border: none !important;
+    outline: none !important;
     border-radius: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4px;
+    padding: 2px;
     cursor: pointer;
     box-shadow: none !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .platform-card__icon-wrapper {
@@ -269,6 +274,7 @@ mark { background:rgba(0,245,212,0.25); color:#ffffff; border-radius:2px; paddin
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -287,7 +293,8 @@ mark { background:rgba(0,245,212,0.25); color:#ffffff; border-radius:2px; paddin
   font-weight: 500; 
   white-space: nowrap; 
   color: #94a3b8; 
-  margin-top: 8px;
+  margin-top: 6px;
+  line-height: 1.2;
   transition: color 0.15s ease;
 }
 .platform-card--active .platform-card__label { 
