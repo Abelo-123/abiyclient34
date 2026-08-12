@@ -13,27 +13,35 @@ export function GlobalHeader({ onSearchClick, onNotificationClick }: Props) {
     return (
         <div className="global-header">
             <div className="global-header__left">
-                <Avatar 
-                    size={48} 
-                    src={user?.photo_url} 
-                    acronym={user?.first_name ? user.first_name[0] : 'U'} 
-                    style={{ border: '2px solid rgba(124,92,252,0.4)' }}
-                />
+                <div className="global-header__avatar-wrapper">
+                    <div className="global-header__avatar-shield" />
+                    <Avatar 
+                        size={48} 
+                        src={user?.photo_url} 
+                        acronym={user?.first_name ? user.first_name[0] : 'P'} 
+                        style={{ border: '2px solid rgba(212, 175, 55, 0.6)' }}
+                    />
+                </div>
                 <div className="global-header__info">
-                    <div className="global-header__name">
-                        {user?.first_name || 'User'} 🕊
+                    <div className="global-header__name-row">
+                        <span className="global-header__name">{user?.first_name || 'Paxyo'}</span>
+                        <span className="global-header__verified-badge" title="Verified User">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#080d19" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </span>
                     </div>
                     <div className="global-header__balance">
-                        {user ? `${Number(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ETB` : '0.00 ETB'}
-                        <span 
-                            onClick={() => setActiveTab('deposit')} 
-                            style={{ marginLeft: 8, color: 'var(--tg-theme-link-color)', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}
-                        >
-                            + ADD FUNDS
-                        </span>
+                        {user ? `${Number(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ETB` : '21.00 ETB'}
                     </div>
                 </div>
             </div>
+            <button 
+                className="global-header__add-funds-btn"
+                onClick={() => setActiveTab('deposit')}
+            >
+                + ADD FUNDS
+            </button>
             <div className="global-header__actions">
                 <div style={{ position: 'relative' }}>
                     <Button

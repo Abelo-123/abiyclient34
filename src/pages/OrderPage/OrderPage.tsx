@@ -219,18 +219,20 @@ export function OrderPage() {
             {/* ─── Phone Verification Banner ─── */}
             {!user?.phone_verified && (
                 <div style={{
-                    background: 'rgba(124, 92, 252, 0.1)',
-                    border: '1px solid rgba(124, 92, 252, 0.2)',
-                    borderRadius: '12px',
-                    padding: '14px 16px',
+                    background: 'rgba(18, 26, 43, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '18px',
+                    padding: '20px 16px',
                     margin: '12px 16px',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '10px',
+                    gap: '14px',
                     alignItems: 'center',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)'
                 }}>
-                    <span style={{ fontSize: '13px', color: 'var(--tg-theme-text-color)', lineHeight: '1.4' }}>
+                    <span style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.4' }}>
                         Verify your phone number to unlock additional benefits and improve account security
                     </span>
                     <button
@@ -239,15 +241,17 @@ export function OrderPage() {
                             setShowVerifyModal(true);
                         }}
                         style={{
-                            background: 'var(--accent-primary, #7c5cfc)',
-                            color: '#ffffff',
+                            background: 'linear-gradient(135deg, #00f5d4 0%, #00b4d8 100%)',
+                            color: '#080d19',
                             border: 'none',
-                            borderRadius: '8px',
-                            padding: '8px 16px',
-                            fontWeight: 'bold',
-                            fontSize: '12px',
+                            borderRadius: '24px',
+                            padding: '10px 28px',
+                            fontWeight: '700',
+                            fontSize: '13px',
                             cursor: 'pointer',
-                            width: 'fit-content'
+                            width: 'fit-content',
+                            boxShadow: '0 0 18px rgba(0, 245, 212, 0.45)',
+                            transition: 'transform 0.15s ease'
                         }}
                     >
                         Verify Now
@@ -260,21 +264,22 @@ export function OrderPage() {
                 <div style={{
                     position: 'fixed',
                     top: 0, left: 0, right: 0, bottom: 0,
-                    background: 'rgba(0, 0, 0, 0.65)',
+                    background: 'rgba(0, 0, 0, 0.75)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     zIndex: 9999,
-                    padding: '16px'
+                    padding: '16px',
+                    backdropFilter: 'blur(8px)'
                 }}>
                     <div style={{
-                        background: 'var(--tg-theme-bg-color, #1c1c2e)',
+                        background: '#0e1626',
                         padding: '24px 20px',
-                        borderRadius: '16px',
+                        borderRadius: '20px',
                         width: '90%',
                         maxWidth: '460px',
-                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.35)',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
                         position: 'relative'
                     }}>
                         <button
@@ -285,7 +290,7 @@ export function OrderPage() {
                                 right: '12px',
                                 background: 'transparent',
                                 border: 'none',
-                                color: 'var(--tg-theme-hint-color, #8b8baf)',
+                                color: '#8e9aaf',
                                 fontSize: '18px',
                                 cursor: 'pointer',
                                 padding: '4px'
@@ -316,15 +321,12 @@ export function OrderPage() {
                             import('../../helpers/telegram').then(m => m.hapticNotification('error'));
                         }
                     }}
-                    after={selectedCategory 
-                        ? <span style={{color: 'var(--color-success)', fontWeight: 'bold'}}>✓</span> 
-                        : <span style={{ color: 'var(--tg-theme-hint-color)' }}>{'>'}</span>
-                    }
+                    after={<span style={{ color: '#d4af37', fontSize: '16px', fontWeight: 'bold' }}>∨</span>}
                 >
-                    <span style={{ fontWeight: selectedCategory ? 600 : 400 }}>Category</span>
+                    <span style={{ fontWeight: selectedCategory ? 600 : 400, color: '#ffffff' }}>Category</span>
                 </Cell>
                 
-                <div style={{ height: '0.5px', background: 'var(--tg-theme-section-separator-color)', marginLeft: '16px' }} />
+                <div style={{ height: '0.5px', background: 'rgba(255, 255, 255, 0.08)', marginLeft: '16px' }} />
 
                 <Cell
                     subtitle={selectedService?.name || 'Select a service'}
@@ -332,12 +334,9 @@ export function OrderPage() {
                     onClick={() => {
                         if (selectedCategory) setShowServiceModal(true);
                     }}
-                    after={selectedService 
-                        ? <span style={{color: 'var(--color-success)', fontWeight: 'bold'}}>✓</span> 
-                        : <span style={{ color: 'var(--tg-theme-hint-color)' }}>{'>'}</span>
-                    }
+                    after={<span style={{ color: '#d4af37', fontSize: '16px', fontWeight: 'bold' }}>∨</span>}
                 >
-                    <span style={{ fontWeight: selectedService ? 600 : 400 }}>Service</span>
+                    <span style={{ fontWeight: selectedService ? 600 : 400, color: '#ffffff' }}>Service</span>
                 </Cell>
             </Section>
 

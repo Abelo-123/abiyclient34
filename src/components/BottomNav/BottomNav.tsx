@@ -70,28 +70,66 @@ export function BottomNav() {
     };
 
     return (
-        <Tabbar style={{ zIndex: 100, borderTop: '1px solid var(--surface-glass-border)', background: 'var(--tg-theme-bg-color, #0a0a0f)' }}>
-            {TABS.map(tab => (
-                <Tabbar.Item
-                    key={tab.id}
-                    selected={activeTab === tab.id}
-                    text={tab.label}
-                    onClick={() => handleTabClick(tab.id)}
-                >
-                    <div 
-                        style={{ position: 'relative', display: 'inline-flex' }}
-                    >
-                        <span className={`bottom-nav__icon ${activeTab === tab.id ? 'bottom-nav__item--active' : ''} ${tab.id === 'history' && pulseHistory ? 'history-pulse' : ''}`} style={activeTab === tab.id ? { color: 'var(--accent-primary)', transform: 'scale(1.1)' } : { color: 'var(--tg-theme-hint-color, #888)' }}>
-                            {tab.icon}
-                        </span>
-                        {tab.id === 'more' && unreadAlerts > 0 && (
-                            <span className="bottom-nav__badge">
-                                {unreadAlerts > 9 ? '9+' : unreadAlerts}
-                            </span>
-                        )}
-                    </div>
-                </Tabbar.Item>
-            ))}
-        </Tabbar>
+        <div style={{ position: 'relative' }}>
+            <Tabbar 
+                style={{ 
+                    zIndex: 100, 
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)', 
+                    background: 'rgba(9, 13, 22, 0.92)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    paddingTop: '4px'
+                }}
+            >
+                {TABS.map(tab => {
+                    const isActive = activeTab === tab.id;
+                    return (
+                        <Tabbar.Item
+                            key={tab.id}
+                            selected={isActive}
+                            text={tab.label}
+                            onClick={() => handleTabClick(tab.id)}
+                            style={{ position: 'relative' }}
+                        >
+                            {isActive && (
+                                <div 
+                                    style={{
+                                        position: 'absolute',
+                                        top: '-5px',
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        width: '28px',
+                                        height: '3px',
+                                        borderRadius: '2px',
+                                        background: '#d4af37',
+                                        boxShadow: '0 0 8px rgba(212, 175, 55, 0.8)'
+                                    }} 
+                                />
+                            )}
+                            <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span 
+                                    className={`bottom-nav__icon ${isActive ? 'bottom-nav__item--active' : ''} ${tab.id === 'history' && pulseHistory ? 'history-pulse' : ''}`} 
+                                    style={isActive ? { 
+                                        color: '#00f5d4', 
+                                        transform: 'scale(1.1)',
+                                        filter: 'drop-shadow(0 0 6px rgba(0, 245, 212, 0.7))',
+                                        transition: 'all 0.15s ease'
+                                    } : { 
+                                        color: '#64748b' 
+                                    }}
+                                >
+                                    {tab.icon}
+                                </span>
+                                {tab.id === 'more' && unreadAlerts > 0 && (
+                                    <span className="bottom-nav__badge">
+                                        {unreadAlerts > 9 ? '9+' : unreadAlerts}
+                                    </span>
+                                )}
+                            </div>
+                        </Tabbar.Item>
+                    );
+                })}
+            </Tabbar>
+        </div>
     );
 }
