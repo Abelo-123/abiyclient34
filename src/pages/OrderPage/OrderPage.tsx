@@ -16,7 +16,7 @@ export function OrderPage() {
         user, refreshOrders,
         recommendedIds, selectedPlatform, selectedCategory, selectedService,
         setSelectedPlatform, setSelectedCategory, setSelectedService,
-        showToast, discountPercent
+        showToast, discountPercent, setBalance
     } = appContext;
 
     const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -152,6 +152,12 @@ export function OrderPage() {
                 hapticNotification('success');
                 showToast('success', 'Order placed successfully!');
                 
+                if (data.new_balance !== undefined) {
+                    setBalance(data.new_balance);
+                } else if (user) {
+                    setBalance(user.balance - totalCharge);
+                }
+
                 if (isFirstOrder) {
                     localStorage.setItem('pulseHistoryTab', 'true');
                     window.dispatchEvent(new Event('pulseHistoryTab'));
