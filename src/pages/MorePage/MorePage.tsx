@@ -470,19 +470,19 @@ export function MorePage() {
                     subtitle="Business Email"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        window.location.href = 'mailto:mesfinabiy3@gmail.com';
+                        window.location.href = 'mailto:Primora97@gmail.com';
                     }}
                 >
-                    mesfinabiy3@gmail.com
+                    Primora97@gmail.com
                 </Cell>
                 <Cell
                     subtitle="Phone Number"
                     onClick={() => {
                         import('../../helpers/telegram').then(m => m.hapticSelection());
-                        window.location.href = 'tel:0979722897';
+                        window.location.href = 'tel:0901250406';
                     }}
                 >
-                    0979722897
+                    0901250406
                 </Cell>
                 <Cell
                     before={
