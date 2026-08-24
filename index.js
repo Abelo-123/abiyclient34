@@ -147,6 +147,65 @@ app.get('/api/test-db', async (req, res) => {
     }
 });
 
+// Test Deposit Notification Simulation (GET / POST)
+app.all(['/api/test-deposit-notification', '/api/simulate-deposit'], async (req, res) => {
+    try {
+        const amount = parseFloat(req.query.amount || req.body?.amount || 250);
+        const userId = String(req.query.user_id || req.query.tg_id || req.body?.user_id || '5928771903');
+        const firstName = String(req.query.first_name || req.query.name || req.body?.first_name || 'RealUserSim');
+        const botId = req.query.bot_id || req.body?.bot_id || '8590320768';
+        const txRef = `DEP-SIM-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+
+        const conn = await pool.getConnection();
+        try {
+            const [users] = await conn.execute('SELECT * FROM auth WHERE tg_id = ? AND bot_id = ?', [userId, botId]);
+            if (users.length === 0) {
+                await conn.execute('INSERT INTO auth (tg_id, bot_id, first_name, balance, auth_provider, last_login) VALUES (?, ?, ?, 0.00, "telegram", NOW())', [userId, botId, firstName]);
+            } else if (firstName && users[0].first_name !== firstName) {
+                await conn.execute('UPDATE auth SET first_name = ? WHERE tg_id = ? AND bot_id = ?', [firstName, userId, botId]);
+            }
+
+            await conn.execute('INSERT INTO deposits (user_id, bot_id, amount, tx_ref, chapa_tx_ref, status, completed_at) VALUES (?, ?, ?, ?, ?, "success", NOW())', [userId, botId, amount, txRef, `CHAPA-SIM-${Date.now()}`]);
+            await conn.execute('UPDATE auth SET balance = balance + ? WHERE tg_id = ? AND bot_id = ?', [amount, userId, botId]);
+            const [balRows] = await conn.execute('SELECT balance FROM auth WHERE tg_id = ? AND bot_id = ?', [userId, botId]);
+            const newBalance = balRows.length > 0 ? parseFloat(balRows[0].balance) : 0;
+            conn.release();
+
+            let notifyResult = null;
+            try {
+                const botRes = await fetch('https://primore-bot.onrender.com/api/sendToJohn', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'deposit', uid: userId, amount, uuid: firstName })
+                });
+                notifyResult = await botRes.text();
+            } catch (err) {
+                notifyResult = err.message;
+            }
+
+            return res.json({
+                success: true,
+                simulation: true,
+                message: 'Deposit notification simulation triggered successfully!',
+                details: {
+                    tx_ref: txRef,
+                    user_id: userId,
+                    first_name: firstName,
+                    amount,
+                    new_balance: newBalance,
+                    bot_id: botId,
+                    notification: notifyResult
+                }
+            });
+        } catch (dbErr) {
+            conn.release();
+            throw dbErr;
+        }
+    } catch (e) {
+        res.status(500).json({ success: false, error: e.message });
+    }
+});
+
 // Chapa Routes
 app.use('/api/deposit', depositRouter);
 app.use('/api/complete-deposit', completeDepositRouter);
