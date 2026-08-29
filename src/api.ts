@@ -4,7 +4,7 @@ import type {
     DepositResponse, AlertsResponse, StatusSyncResponse,
     CustomField,
 } from './types';
-import { getInitDataRaw, getTelegramBotId } from './helpers/telegram';
+import { getInitDataRaw } from './helpers/telegram';
 
 export const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com';
 
@@ -33,28 +33,21 @@ async function nodeApiFetch<T>(
     const initData = getInitDataRaw() || '';
     let body = options?.body;
 
-    // Detect botId directly from native SDK or launch parameters URL/fallback
-    const botId = getTelegramBotId() || '';
-
-    // Auto-inject initData and bot_id
+    // Auto-inject initData
     if (options?.method === 'POST' || options?.method === 'PUT') {
         if (typeof body === 'string') {
             try {
                 const parsed = JSON.parse(body);
                 if (!parsed.initData) parsed.initData = initData;
-                if (botId && !parsed.bot_id) parsed.bot_id = botId;
                 body = JSON.stringify(parsed);
             } catch(e) {}
         } else if (!body) {
-            body = JSON.stringify({ initData, ...(botId ? { bot_id: botId } : {}) });
+            body = JSON.stringify({ initData });
         }
     } else {
-        // GET requests: append initData and bot_id to query params
+        // GET requests: append initData to query params
         const sep = url.includes('?') ? '&' : '?';
         url += `${sep}initData=${encodeURIComponent(initData)}`;
-        if (botId) {
-            url += `&bot_id=${encodeURIComponent(botId)}`;
-        }
     }
 
     debug('[API] Fetching:', url);
