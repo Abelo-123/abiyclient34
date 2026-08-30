@@ -74,7 +74,46 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // Track whether we've logged the user's initData payload to the backend
     const initDataLoggedRef = useRef(false);
 
-    const [user, setUser] = useState<UserProfile | null>(null);
+    const USER_CACHE_KEY = 'primora_user_cache';
+
+    const [user, setUserState] = useState<UserProfile | null>(() => {
+        try {
+            const cachedStr = localStorage.getItem(USER_CACHE_KEY);
+            const cached = cachedStr ? JSON.parse(cachedStr) : null;
+            const tgUser = getInitDataUser();
+
+            if (tgUser) {
+                const displayName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || 'User';
+                return {
+                    id: tgUser.id,
+                    first_name: tgUser.first_name || (cached?.first_name || 'User'),
+                    last_name: tgUser.last_name || (cached?.last_name || ''),
+                    username: tgUser.username || (cached?.username || ''),
+                    display_name: displayName,
+                    photo_url: tgUser.photo_url || (cached?.photo_url || ''),
+                    balance: cached?.balance !== undefined ? parseFloat(cached.balance) : 0,
+                    referral_code: cached?.referral_code,
+                    referred_by: cached?.referred_by,
+                    refers: cached?.refers,
+                    phone_number: cached?.phone_number,
+                    phone_verified: cached?.phone_verified,
+                };
+            }
+
+            if (cached) return cached;
+        } catch (e) { }
+        return null;
+    });
+
+    const setUser = useCallback((newUser: UserProfile | null | ((prev: UserProfile | null) => UserProfile | null)) => {
+        setUserState(prev => {
+            const updated = typeof newUser === 'function' ? newUser(prev) : newUser;
+            if (updated) {
+                try { localStorage.setItem(USER_CACHE_KEY, JSON.stringify(updated)); } catch (e) {}
+            }
+            return updated;
+        });
+    }, []);
     const [services, setServices] = useState<Service[]>([]);
     const [recommendedIds, setRecommendedIds] = useState<number[]>([]);
     const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform | null>(null);
@@ -297,8 +336,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }, [refreshServices, refreshDeposits, refreshOrders]);
 
     const setBalance = useCallback((balance: number) => {
-        setUser(prev => prev ? { ...prev, balance } : prev);
-    }, []);
+        setUser(prev => {
+            if (!prev) return prev;
+            const updated = { ...prev, balance };
+            try { localStorage.setItem(USER_CACHE_KEY, JSON.stringify(updated)); } catch (e) {}
+            return updated;
+        });
+    }, [setUser]);
 
     const showToast = useCallback((type: ToastMessage['type'], message: string) => {
         const id = Date.now().toString() + Math.random().toString(36).slice(2);
