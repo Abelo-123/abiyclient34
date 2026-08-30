@@ -27,12 +27,12 @@ api/
 *.swp
 *.swo
 
-# Misc
-*.pid
-scratch/
-*.sql
-*.zip
-*.db
-*.db-journal
-*.log
+# Diagnostic & Internal Tools
+fetch_render_and_db.js
+generate_prompt_docs.js
+initial_architect.js
+powershell.cmd
+*.txt
+*.html
+
 
