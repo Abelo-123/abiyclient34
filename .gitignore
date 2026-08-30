@@ -40,6 +40,7 @@ test_live_api.js
 *.PNG
 *.txt
 *.html
+ZIVIOP_PLATFORM_MASTER_KNOWLEDGE.md
 *.sql
 *.zip
 *.db
