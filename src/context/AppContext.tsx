@@ -126,11 +126,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const { data: qOrders = [], refetch: refreshOrders } = useQuery<Order[]>({
         queryKey: ['orders'],
         queryFn: async () => {
-            try {
-                await api.checkOrderStatus();
-            } catch (e) {
-                console.error('[Orders Sync] Sync with provider failed:', e);
-            }
+            // Check status asynchronously without blocking order list fetch
+            api.checkOrderStatus().catch(e => console.error('[Orders Sync] Sync with provider failed:', e));
             const data = await api.getOrders();
             return data.orders || [];
         },
@@ -171,73 +168,131 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const loadData = async () => {
-            setIsLoading(true);
-            // Load services (most important)
+            let hasCachedServices = false;
             try {
-                const servicesData = await api.getServices(true);
-                const transformed: Service[] = servicesData.map((s: any) => ({
-                    id: s.service || s.id,
-                    category: s.category,
-                    name: s.name,
-                    type: s.type as Service['type'],
-                    rate: parseFloat(s.rate),
-                    original_rate: parseFloat(s.original_rate ?? s.rate),
-                    min: s.min,
-                    max: s.max,
-                    averageTime: s.average_time || s.averageTime || '',
-                    refill: s.refill,
-                    cancel: s.cancel,
-                    custom_description: s.custom_description,
-                }));
-                setServices(transformed);
-            } catch (err) {
-                console.error('Failed to load services:', err);
-            }
-
-            // Load settings (independent of services) - always fetch fresh
-            try {
-                localStorage.removeItem('paxyo_settings_cache');
-                localStorage.removeItem('paxyo_settings_timestamp');
-                const settingsData = await api.getSettings(false);
-                _setSettings({
-                    rateMultiplier: settingsData.rateMultiplier || 1,
-                    discountPercent: settingsData.discountPercent || 0,
-                    holidayName: settingsData.holidayName || '',
-                    maintenanceMode: settingsData.maintenanceMode || false,
-                    userCanOrder: settingsData.userCanOrder !== false,
-                    marqueeText: settingsData.marqueeText || 'Welcome to Paxyo SMM!',
-                    topServicesIds: settingsData.topServicesIds || '',
-                    botUsername: settingsData.botUsername || 'abiyclient_bot',
-                });
-                
-                if (settingsData.topServicesIds) {
-                    const parsedIds = settingsData.topServicesIds
-                        .split(',')
-                        .map(s => parseInt(s.trim(), 10))
-                        .filter(n => !isNaN(n));
-                    setRecommendedIds(parsedIds);
-                } else {
-                    setRecommendedIds([]);
+                const cachedServices = localStorage.getItem('paxyo_services_cache');
+                if (cachedServices) {
+                    const parsed = JSON.parse(cachedServices);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        const transformed: Service[] = parsed.map((s: any) => ({
+                            id: s.service || s.id,
+                            category: s.category,
+                            name: s.name,
+                            type: s.type as Service['type'],
+                            rate: parseFloat(s.rate),
+                            original_rate: parseFloat(s.original_rate ?? s.rate),
+                            min: s.min,
+                            max: s.max,
+                            averageTime: s.average_time || s.averageTime || '',
+                            refill: s.refill,
+                            cancel: s.cancel,
+                            custom_description: s.custom_description,
+                        }));
+                        setServices(transformed);
+                        hasCachedServices = true;
+                    }
                 }
-            } catch (err) {
-                console.error('Failed to load settings:', err);
+                const cachedSettings = localStorage.getItem('paxyo_settings_cache');
+                if (cachedSettings) {
+                    const settingsData = JSON.parse(cachedSettings);
+                    if (settingsData) {
+                        _setSettings({
+                            rateMultiplier: settingsData.rateMultiplier || 1,
+                            discountPercent: settingsData.discountPercent || 0,
+                            holidayName: settingsData.holidayName || '',
+                            maintenanceMode: settingsData.maintenanceMode || false,
+                            userCanOrder: settingsData.userCanOrder !== false,
+                            marqueeText: settingsData.marqueeText || 'Welcome to Paxyo SMM!',
+                            topServicesIds: settingsData.topServicesIds || '',
+                            botUsername: settingsData.botUsername || 'abiyclient_bot',
+                        });
+                        if (settingsData.topServicesIds) {
+                            const parsedIds = settingsData.topServicesIds
+                                .split(',')
+                                .map((s: string) => parseInt(s.trim(), 10))
+                                .filter((n: number) => !isNaN(n));
+                            setRecommendedIds(parsedIds);
+                        }
+                    }
+                }
+            } catch (e) { }
+
+            // Only show full screen loading spinner if we don't have cached services
+            if (!hasCachedServices) {
+                setIsLoading(true);
             }
 
-            // Load user/init data (independent)
             try {
                 const initData = await getInitDataString();
-                if (initData) {
-                    refreshDeposits();
-                    refreshOrders();
-                    api.getBalance(initData).then(res => {
-                        if (res.success) setBalance(res.balance);
-                    }).catch(() => { });
-                }
-            } catch (err) {
-                console.error('Failed to load user data:', err);
-            }
 
-            setIsLoading(false);
+                await Promise.allSettled([
+                    // 1. Load services (background or initial)
+                    (async () => {
+                        try {
+                            const servicesData = await api.getServices(true);
+                            const transformed: Service[] = servicesData.map((s: any) => ({
+                                id: s.service || s.id,
+                                category: s.category,
+                                name: s.name,
+                                type: s.type as Service['type'],
+                                rate: parseFloat(s.rate),
+                                original_rate: parseFloat(s.original_rate ?? s.rate),
+                                min: s.min,
+                                max: s.max,
+                                averageTime: s.average_time || s.averageTime || '',
+                                refill: s.refill,
+                                cancel: s.cancel,
+                                custom_description: s.custom_description,
+                            }));
+                            if (transformed.length > 0) setServices(transformed);
+                        } catch (err) {
+                            console.error('Failed to load services:', err);
+                        }
+                    })(),
+
+                    // 2. Load settings (background or initial)
+                    (async () => {
+                        try {
+                            const settingsData = await api.getSettings(true);
+                            _setSettings({
+                                rateMultiplier: settingsData.rateMultiplier || 1,
+                                discountPercent: settingsData.discountPercent || 0,
+                                holidayName: settingsData.holidayName || '',
+                                maintenanceMode: settingsData.maintenanceMode || false,
+                                userCanOrder: settingsData.userCanOrder !== false,
+                                marqueeText: settingsData.marqueeText || 'Welcome to Paxyo SMM!',
+                                topServicesIds: settingsData.topServicesIds || '',
+                                botUsername: settingsData.botUsername || 'abiyclient_bot',
+                            });
+
+                            if (settingsData.topServicesIds) {
+                                const parsedIds = settingsData.topServicesIds
+                                    .split(',')
+                                    .map(s => parseInt(s.trim(), 10))
+                                    .filter(n => !isNaN(n));
+                                setRecommendedIds(parsedIds);
+                            } else {
+                                setRecommendedIds([]);
+                            }
+                        } catch (err) {
+                            console.error('Failed to load settings:', err);
+                        }
+                    })(),
+
+                    // 3. Load user init data
+                    (async () => {
+                        if (initData) {
+                            refreshDeposits();
+                            refreshOrders();
+                            api.getBalance(initData).then(res => {
+                                if (res.success) setBalance(res.balance);
+                            }).catch(() => { });
+                        }
+                    })()
+                ]);
+            } finally {
+                setIsLoading(false);
+            }
         };
         loadData();
     }, [refreshServices, refreshDeposits, refreshOrders]);

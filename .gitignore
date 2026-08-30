@@ -30,9 +30,20 @@ api/
 # Misc
 *.pid
 scratch/
+powershell.cmd
+fetch_render_and_db.js
+generate_prompt_docs*.js
+initial_architect.js
+migrate_remove_bot_id.js
+test_live_api.js
+*.jpg
+*.PNG
+*.txt
+*.html
 *.sql
 *.zip
 *.db
 *.db-journal
 *.log
+
 
