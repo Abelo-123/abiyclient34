@@ -109,7 +109,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                 </button>
             </div>
             
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }} onScroll={handleScroll}>
+            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }} onScroll={handleScroll}>
                 <div style={{ padding: '8px 0 12px' }}>
                     <Input
                         inputMode="search"

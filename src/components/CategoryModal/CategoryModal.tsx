@@ -88,7 +88,7 @@ export function CategoryModal({ platform, onSelect, onClose }: Props) {
                 </button>
             </div>
             
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }}>
+            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }}>
                 <div style={{ padding: '8px 0 12px' }}>
                     <Input
                         inputMode="search"
