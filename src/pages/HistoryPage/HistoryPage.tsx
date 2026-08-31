@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useDeferredValue } from 'react';
 import { useApp } from '../../context/AppContext';
+import { TableRowSkeleton } from '../../components/Skeleton/SkeletonLoader';
 import { hapticImpact, hapticSelection } from '../../helpers/telegram';
 import { Button, Input } from '@telegram-apps/telegram-ui';
 import type { OrderStatus } from '../../types';
@@ -19,7 +20,7 @@ function normalizeStatus(status: string): OrderStatus {
 }
 
 export function HistoryPage() {
-    const { orders, showToast, refreshOrders, setActiveTab } = useApp();
+    const { orders, showToast, refreshOrders, setActiveTab, isSyncingOrders } = useApp();
     const [filter, setFilter] = useState<OrderStatus | 'all'>('all');
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
@@ -180,7 +181,13 @@ export function HistoryPage() {
             )}
 
             <div className="history-table-wrapper">
-                {filtered.length === 0 ? (
+                {isSyncingOrders && filtered.length === 0 ? (
+                    <div style={{ padding: '16px' }}>
+                        {[1, 2, 3, 4, 5].map(i => (
+                            <TableRowSkeleton key={i} />
+                        ))}
+                    </div>
+                ) : filtered.length === 0 ? (
                     <div className="empty-state">
                         <div className="empty-state__icon">📦</div>
                         <div className="empty-state__title">No Orders Found</div>

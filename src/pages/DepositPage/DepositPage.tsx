@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 
 import { useApp } from '../../context/AppContext';
+import { TableRowSkeleton } from '../../components/Skeleton/SkeletonLoader';
 import { formatETB } from '../../constants';
 import {
     showMainButton,
@@ -23,7 +24,7 @@ const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://paxyoback.inf
 type DepositStep = 'amount' | 'verifying' | 'success' | 'error';
 
 export function DepositPage() {
-    const { user, deposits, setBalance, refreshDeposits, showToast, botUsername } = useApp();
+    const { user, deposits, setBalance, refreshDeposits, showToast, botUsername, isSyncingDeposits } = useApp();
     const [amount, setAmount] = useState('');
     const [step, setStep] = useState<DepositStep>('amount');
     const [errorMessage, setErrorMessage] = useState('');
@@ -576,7 +577,13 @@ export function DepositPage() {
 
             {/* ─── Recent Deposits ─── */}
             <div ref={recentDepositsRef} className="primora-section-header" style={{ marginTop: 24 }}>Recent Deposits</div>
-            {recentDeposits.length === 0 ? (
+            {isSyncingDeposits && recentDeposits.length === 0 ? (
+                <div style={{ padding: '0 16px' }}>
+                    {[1, 2, 3].map(i => (
+                        <TableRowSkeleton key={i} />
+                    ))}
+                </div>
+            ) : recentDeposits.length === 0 ? (
                 <div className="empty-state">
                     <div className="empty-state__icon">💸</div>
                     <div className="empty-state__title">No Deposits Yet</div>

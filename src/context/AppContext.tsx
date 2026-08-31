@@ -36,6 +36,11 @@ interface AppState {
     toasts: ToastMessage[];
     isLoading: boolean;
     unreadAlerts: number;
+    isSyncingBalance: boolean;
+    isSyncingServices: boolean;
+    isSyncingOrders: boolean;
+    isSyncingDeposits: boolean;
+    isSyncingAlerts: boolean;
 }
 
 interface AppActions {
@@ -125,6 +130,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [toasts, setToasts] = useState<ToastMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [unreadAlerts, setUnreadAlerts] = useState(0);
+
+    const [isSyncingBalance, setIsSyncingBalance] = useState(false);
+    const [isSyncingServices, setIsSyncingServices] = useState(false);
+    const [isSyncingDeposits, setIsSyncingDeposits] = useState(false);
+    const [isSyncingAlerts, setIsSyncingAlerts] = useState(false);
+
     const [settings, _setSettings] = useState({
         rateMultiplier: 1,
         discountPercent: 0,
@@ -137,6 +148,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
 
     const refreshServices = useCallback(async () => {
+        setIsSyncingServices(true);
         try {
             // Force refresh from live DB / upstream
             const data = await api.getServices(false, true);
@@ -157,13 +169,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
             setServices(transformed);
         } catch (err) {
             console.error('Failed to fetch services:', err);
+        } finally {
+            setIsSyncingServices(false);
         }
     }, []);
 
     const queryClient = useQueryClient();
 
     // Use React Query for orders - Single Source of Truth
-    const { data: qOrders = [], refetch: refreshOrders } = useQuery<Order[]>({
+    const { data: qOrders = [], refetch: refreshOrders, isFetching: isSyncingOrders } = useQuery<Order[]>({
         queryKey: ['orders'],
         queryFn: async () => {
             // Check status asynchronously without blocking order list fetch
@@ -182,16 +196,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const orders = qOrders;
 
     const refreshDeposits = useCallback(async () => {
+        setIsSyncingDeposits(true);
         try {
             const initData = await getInitDataString();
             const data = await api.getDeposits(initData);
             setDeposits(data);
         } catch (err) {
             console.error('Failed to refresh deposits:', err);
+        } finally {
+            setIsSyncingDeposits(false);
         }
     }, []);
 
     const refreshAlerts = useCallback(async () => {
+        setIsSyncingAlerts(true);
         try {
             const initData = await getInitDataString();
             if (initData) {
@@ -203,6 +221,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
             }
         } catch (err) {
             console.error('Failed to refresh alerts:', err);
+        } finally {
+            setIsSyncingAlerts(false);
         }
     }, [setAlerts, setUnreadAlerts]);
 
@@ -272,12 +292,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
                 // 2a. Priority 1: User Auth & Balance (instant DB query)
                 if (initData) {
+                    setIsSyncingBalance(true);
                     api.getBalance(initData).then(res => {
                         if (res.success) setBalance(res.balance);
-                    }).catch(() => { });
+                    }).catch(() => { }).finally(() => setIsSyncingBalance(false));
                 }
 
                 // 2b. Priority 2: Real-time Services & Settings from DB (forceRefresh = true)
+                setIsSyncingServices(true);
                 await Promise.allSettled([
                     (async () => {
                         try {
@@ -330,6 +352,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                         }
                     })()
                 ]);
+                setIsSyncingServices(false);
 
                 // 2c. Priority 3: User Activity & History (orders, deposits, alerts)
                 if (initData) {
@@ -589,6 +612,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         toasts,
         isLoading,
         unreadAlerts,
+        isSyncingBalance,
+        isSyncingServices,
+        isSyncingOrders,
+        isSyncingDeposits,
+        isSyncingAlerts,
         setUser,
         setActiveTab: handleSetActiveTab,
         setSelectedPlatform: handleSetSelectedPlatform,
@@ -610,6 +638,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         user, isTelegramApp, services, recommendedIds, selectedPlatform,
         selectedCategory, selectedService, orders, deposits, alerts,
         settings, activeTab, toasts, isLoading, unreadAlerts,
+        isSyncingBalance, isSyncingServices, isSyncingOrders, isSyncingDeposits, isSyncingAlerts,
         handleSetActiveTab, handleSetSelectedPlatform, handleSetSelectedService,
         showToast, removeToast, refreshServices, refreshOrders, refreshDeposits, refreshAlerts, setBalance
     ]);

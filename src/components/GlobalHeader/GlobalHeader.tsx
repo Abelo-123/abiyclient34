@@ -1,4 +1,5 @@
 import { useApp } from '../../context/AppContext';
+import { BadgeSkeleton } from '../Skeleton/SkeletonLoader';
 
 import { Avatar, Button } from '@telegram-apps/telegram-ui';
 
@@ -8,7 +9,7 @@ interface Props {
 }
 
 export function GlobalHeader({ onSearchClick, onNotificationClick }: Props) {
-    const { user, unreadAlerts, setActiveTab } = useApp();
+    const { user, unreadAlerts, setActiveTab, isSyncingBalance } = useApp();
 
     return (
         <div className="global-header">
@@ -32,7 +33,11 @@ export function GlobalHeader({ onSearchClick, onNotificationClick }: Props) {
                         </span>
                     </div>
                     <div className="global-header__balance">
-                        {user ? `${Number(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ETB` : '21.00 ETB'}
+                        {isSyncingBalance ? (
+                            <BadgeSkeleton width={72} height={18} />
+                        ) : (
+                            user ? `${Number(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ETB` : '0.00 ETB'
+                        )}
                     </div>
                 </div>
             </div>

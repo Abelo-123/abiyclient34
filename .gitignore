@@ -20,6 +20,7 @@ logs
 # Build outputs
 dist/
 build/
+api/
 # IDE
 .vscode/
 .idea/
