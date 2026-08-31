@@ -139,6 +139,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const [settings, _setSettings] = useState({
         rateMultiplier: 1,
+        adminMargin: 92,
         discountPercent: 0,
         holidayName: '',
         maintenanceMode: false,
