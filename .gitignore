@@ -34,5 +34,13 @@ initial_architect.js
 powershell.cmd
 *.txt
 *.html
-
-
+*.pid
+scratch/
+migrate_remove_bot_id.js
+test_live_api.js
+*.jpg
+*.PNG
+*.sql
+*.zip
+*.db
+*.db-journal
