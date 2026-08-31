@@ -1,36 +1,22 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { List, Section, Input, Placeholder } from '@telegram-apps/telegram-ui';
-import { onBackButtonClick, showBackButton, hideBackButton } from '@telegram-apps/sdk-react';
 import type { Service, SocialPlatform } from '../../types';
 import { formatETB } from '../../constants';
 import { useAllServices } from '../../hooks/useAllServices';
 import { useApp } from '../../context/AppContext';
 import { TextSkeleton } from '../Skeleton/SkeletonLoader';
+import { useModalLock } from '../../hooks/useModalLock';
 
 interface Props {
     onClose: () => void;
 }
 
 export function SearchModal({ onClose }: Props) {
+    useModalLock(onClose);
     const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab, isSyncingServices } = useApp();
     const [search, setSearch] = useState('');
     const { data: services = [], isLoading, isFetching } = useAllServices();
     const showRateSkeleton = isSyncingServices || isFetching;
-
-    useEffect(() => {
-        try {
-            showBackButton();
-            const off = onBackButtonClick(() => {
-                onClose();
-            });
-            return () => {
-                off();
-                hideBackButton();
-            };
-        } catch (e) {
-            console.error('Back button setup failed', e);
-        }
-    }, [onClose]);
 
     const results = useMemo(() => {
         const q = search.trim().toLowerCase();
@@ -83,18 +69,22 @@ export function SearchModal({ onClose }: Props) {
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'var(--tg-theme-bg-color, #ffffff)',
-            zIndex: 9999,
+            width: '100vw',
+            height: '100dvh',
+            backgroundColor: 'var(--tg-theme-bg-color, #1a1a2e)',
+            zIndex: 99999,
             display: 'flex',
             flexDirection: 'column',
-            animation: 'slideUp 0.3s ease-out'
+            overflow: 'hidden',
+            animation: 'slideUp 0.3s ease-out',
+            touchAction: 'none'
         }}>
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '16px',
-                borderBottom: '1px solid var(--tg-theme-hint-color, #e0e0e0)'
+                borderBottom: '1px solid var(--tg-theme-hint-color, rgba(255,255,255,0.1))'
             }}>
                 <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>🔍 Search</h2>
                 <button 
@@ -102,7 +92,7 @@ export function SearchModal({ onClose }: Props) {
                     style={{
                         background: 'transparent',
                         border: 'none',
-                        color: 'var(--tg-theme-text-color, #000)',
+                        color: 'var(--tg-theme-text-color, #fff)',
                         cursor: 'pointer',
                         padding: '4px'
                     }}
@@ -113,7 +103,7 @@ export function SearchModal({ onClose }: Props) {
                     </svg>
                 </button>
             </div>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }}>
+            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px', touchAction: 'pan-y' }}>
                 <div style={{ padding: '8px 0 12px' }}>
                     <Input
                         inputMode="search"

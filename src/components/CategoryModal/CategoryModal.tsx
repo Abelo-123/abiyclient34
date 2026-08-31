@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useDeferredValue, useEffect } from 'react';
+import React, { useState, useMemo, useDeferredValue } from 'react';
 import { List, Section, Input, Placeholder } from '@telegram-apps/telegram-ui';
-import { onBackButtonClick, showBackButton, hideBackButton } from '@telegram-apps/sdk-react';
 import type { SocialPlatform } from '../../types';
 import { useCategories } from '../../hooks/useCategories';
+import { useModalLock } from '../../hooks/useModalLock';
 
 interface Props {
     platform: SocialPlatform;
@@ -11,30 +11,10 @@ interface Props {
 }
 
 export function CategoryModal({ platform, onSelect, onClose }: Props) {
+    useModalLock(onClose);
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
     const { data: rawCategories = [], isLoading: loading } = useCategories(platform);
-
-    useEffect(() => {
-        const prev = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-        try {
-            showBackButton();
-            const off = onBackButtonClick(() => {
-                onClose();
-            });
-            return () => {
-                document.body.style.overflow = prev;
-                off();
-                hideBackButton();
-            };
-        } catch (e) {
-            console.error('Back button setup failed', e);
-            return () => {
-                document.body.style.overflow = prev;
-            };
-        }
-    }, [onClose]);
 
     const categories = useMemo(() => {
         if (platform === 'top') return ['Top Services'];
@@ -58,7 +38,8 @@ export function CategoryModal({ platform, onSelect, onClose }: Props) {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            animation: 'slideUp 0.3s ease-out'
+            animation: 'slideUp 0.3s ease-out',
+            touchAction: 'none'
         }}>
             <div style={{
                 display: 'flex',
@@ -85,7 +66,7 @@ export function CategoryModal({ platform, onSelect, onClose }: Props) {
                 </button>
             </div>
 
-            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }}>
+            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px', touchAction: 'pan-y' }}>
                 <div style={{ padding: '8px 0 12px' }}>
                     <Input
                         inputMode="search"

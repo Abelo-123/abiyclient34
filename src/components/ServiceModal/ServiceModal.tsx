@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useDeferredValue, useEffect } from 'react';
+import React, { useState, useMemo, useDeferredValue } from 'react';
 import { List, Section, Input, Placeholder } from '@telegram-apps/telegram-ui';
-import { onBackButtonClick, showBackButton, hideBackButton } from '@telegram-apps/sdk-react';
 import type { Service } from '../../types';
 import { formatETB } from '../../constants';
 import { useCategoryServices } from '../../hooks/useCategoryServices';
 import { useApp } from '../../context/AppContext';
 import { TextSkeleton } from '../Skeleton/SkeletonLoader';
+import { useModalLock } from '../../hooks/useModalLock';
 
 interface Props {
     category: string;
@@ -17,6 +17,7 @@ interface Props {
 const BATCH_SIZE = 50;
 
 export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Props) {
+    useModalLock(onClose);
     const { isSyncingServices } = useApp();
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
@@ -24,27 +25,6 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
 
     const { data: categoryServices = [], isLoading: loading, isFetching, isError } = useCategoryServices(category, recommendedIds);
     const showRateSkeleton = isSyncingServices || isFetching;
-
-    useEffect(() => {
-        const prev = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-        try {
-            showBackButton();
-            const off = onBackButtonClick(() => {
-                onClose();
-            });
-            return () => {
-                document.body.style.overflow = prev;
-                off();
-                hideBackButton();
-            };
-        } catch (e) {
-            console.error('Back button setup failed', e);
-            return () => {
-                document.body.style.overflow = prev;
-            };
-        }
-    }, [onClose]);
 
     const filtered = useMemo(() => {
         if (!deferredSearch.trim()) return categoryServices;
@@ -78,7 +58,8 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            animation: 'slideUp 0.3s ease-out'
+            animation: 'slideUp 0.3s ease-out',
+            touchAction: 'none'
         }}>
             <div style={{
                 display: 'flex',
@@ -105,7 +86,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                 </button>
             </div>
 
-            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }} onScroll={handleScroll}>
+            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px', touchAction: 'pan-y' }} onScroll={handleScroll}>
                 <div style={{ padding: '8px 0 12px' }}>
                     <Input
                         inputMode="search"
