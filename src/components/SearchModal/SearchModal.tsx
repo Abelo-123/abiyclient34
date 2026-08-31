@@ -18,23 +18,17 @@ export function SearchModal({ onClose }: Props) {
     const showRateSkeleton = isSyncingServices || isFetching;
 
     useEffect(() => {
-        const prev = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
         try {
             showBackButton();
             const off = onBackButtonClick(() => {
                 onClose();
             });
             return () => {
-                document.body.style.overflow = prev;
                 off();
                 hideBackButton();
             };
         } catch (e) {
             console.error('Back button setup failed', e);
-            return () => {
-                document.body.style.overflow = prev;
-            };
         }
     }, [onClose]);
 
@@ -89,13 +83,10 @@ export function SearchModal({ onClose }: Props) {
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
-            width: '100vw',
-            height: '100dvh',
-            backgroundColor: 'var(--tg-theme-bg-color, #1a1a2e)',
-            zIndex: 99999,
+            backgroundColor: 'var(--tg-theme-bg-color, #ffffff)',
+            zIndex: 9999,
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden',
             animation: 'slideUp 0.3s ease-out'
         }}>
             <div style={{
@@ -122,7 +113,7 @@ export function SearchModal({ onClose }: Props) {
                     </svg>
                 </button>
             </div>
-            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }}>
+            <div className="modal-custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }}>
                 <div style={{ padding: '8px 0 12px' }}>
                     <Input
                         inputMode="search"

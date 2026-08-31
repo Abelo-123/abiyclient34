@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useDeferredValue, useEffect } from 'react';
-import { Input } from '@telegram-apps/telegram-ui';
+// Removed unused imports
 import { onBackButtonClick, showBackButton, hideBackButton } from '@telegram-apps/sdk-react';
 import type { Service } from '../../types';
 import { formatETB } from '../../constants';
@@ -26,25 +26,19 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
     const { data: categoryServices = [], isLoading: loading, isFetching, isError } = useCategoryServices(category, recommendedIds);
     const showRateSkeleton = isSyncingServices || isFetching;
 
-    // 2. Native Back Button Flow & Body Scroll Lock
+    // 2. Native Back Button Flow
     useEffect(() => {
-        const prev = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
         try {
             showBackButton();
             const off = onBackButtonClick(() => {
                 onClose();
             });
             return () => {
-                document.body.style.overflow = prev;
                 off();
                 hideBackButton();
             };
         } catch (e) {
             console.error('Back button setup failed', e);
-            return () => {
-                document.body.style.overflow = prev;
-            };
         }
     }, [onClose]);
 
@@ -73,54 +67,79 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
-            width: '100vw',
-            height: '100dvh',
-            backgroundColor: 'var(--tg-theme-bg-color, #1a1a2e)',
-            zIndex: 99999,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            zIndex: 9999,
             display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-            animation: 'slideUp 0.3s ease-out'
-        }}>
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+        }} onClick={onClose}>
             <div style={{
+                backgroundColor: 'var(--tg-theme-bg-color, #1a1a2e)',
+                borderRadius: '16px',
+                width: '100%',
+                maxWidth: '400px',
+                height: '60vh',
+                maxHeight: '60vh',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '16px',
-                borderBottom: '1px solid var(--tg-theme-hint-color, rgba(255,255,255,0.1))'
-            }}>
-                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: 'var(--tg-theme-text-color, #ffffff)' }}>
-                    Select Service
-                </h2>
-                <button 
-                    onClick={onClose}
-                    style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'var(--tg-theme-text-color, #fff)',
-                        cursor: 'pointer',
-                        padding: '4px'
-                    }}
-                >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            
-            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }} onScroll={handleScroll}>
-                <div style={{ padding: '8px 0 12px' }}>
-                    <Input
+                flexDirection: 'column',
+                overflow: 'hidden',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                animation: 'scaleIn 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
+            }} onClick={e => e.stopPropagation()}>
+
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '16px',
+                    borderBottom: '1px solid rgba(255,255,255,0.06)'
+                }}>
+                    <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--tg-theme-text-color, #ffffff)' }}>Select Service</span>
+                    <button 
+                        onClick={onClose}
+                        style={{
+                            background: 'rgba(255,255,255,0.08)',
+                            border: 'none',
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#999',
+                            cursor: 'pointer',
+                            fontSize: '12px'
+                        }}
+                    >✕</button>
+                </div>
+                
+                <div style={{ padding: '12px 16px 8px' }}>
+                    <input
+                        type="text"
                         inputMode="search"
                         autoComplete="off"
                         spellCheck={false}
                         placeholder="Search services..."
                         value={search}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-                        className="modal-search-input"
+                        style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '10px',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            backgroundColor: 'rgba(0,0,0,0.15)',
+                            color: 'var(--tg-theme-text-color, #fff)',
+                            fontSize: '14px',
+                            outline: 'none'
+                        }}
                     />
                 </div>
+
+                <div className="modal-custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }} onScroll={handleScroll}>
                     {loading ? (
                         <div style={{ padding: '16px' }}>
                             {[1, 2, 3, 4, 5].map(i => (
@@ -201,6 +220,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                         </div>
                     )}
                 </div>
+            </div>
         </div>
     );
 }

@@ -120,16 +120,6 @@ export function MorePage() {
 
 
     useEffect(() => {
-        if (showWithdrawModal || showColorsModal) {
-            const prev = document.body.style.overflow;
-            document.body.style.overflow = 'hidden';
-            return () => {
-                document.body.style.overflow = prev;
-            };
-        }
-    }, [showWithdrawModal, showColorsModal]);
-
-    useEffect(() => {
         refreshAlerts();
         loadReferralStats();
         loadWithdrawalHistory();
@@ -587,7 +577,7 @@ export function MorePage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    zIndex: 99999,
+                    zIndex: 9999,
                     padding: '16px'
                 }}>
                     <div style={{
@@ -672,7 +662,7 @@ export function MorePage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    zIndex: 99999,
+                    zIndex: 9999,
                     padding: '16px'
                 }}>
                     <div style={{
@@ -717,7 +707,7 @@ export function MorePage() {
                             These variables are automatically set by the Telegram client. Click any item to copy its CSS custom property.
                         </p>
 
-                        <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '4px' }}>
+                        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '4px' }}>
                             {tgColors.map((color, idx) => (
                                 <div
                                     key={idx}

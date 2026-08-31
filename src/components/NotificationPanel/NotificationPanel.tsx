@@ -17,29 +17,21 @@ export function NotificationPanel({ onBack }: Props) {
         }
     };
 
-    // Auto-mark as read and lock body scroll when user opens the panel
+    // Auto-mark as read when user opens the panel
     useEffect(() => {
-        const prev = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
         if (unreadAlerts > 0) {
             markAlertsRead();
         }
-        return () => {
-            document.body.style.overflow = prev;
-        };
     }, [unreadAlerts]);
 
     return (
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
-            width: '100vw',
-            height: '100dvh',
-            backgroundColor: 'var(--tg-theme-bg-color, #1a1a2e)',
-            zIndex: 99999,
+            backgroundColor: 'var(--tg-theme-bg-color, #ffffff)',
+            zIndex: 9999,
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden',
             animation: 'slideUp 0.3s ease-out'
         }}>
             <div style={{
@@ -47,15 +39,15 @@ export function NotificationPanel({ onBack }: Props) {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '16px',
-                borderBottom: '1px solid var(--tg-theme-hint-color, rgba(255,255,255,0.1))'
+                borderBottom: '1px solid var(--tg-theme-hint-color, #e0e0e0)'
             }}>
-                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: 'var(--tg-theme-text-color, #ffffff)' }}>Notifications</h2>
+                <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>Notifications</h2>
                 <button 
                     onClick={onBack}
                     style={{
                         background: 'transparent',
                         border: 'none',
-                        color: 'var(--tg-theme-text-color, #fff)',
+                        color: 'var(--tg-theme-text-color, #000)',
                         cursor: 'pointer',
                         padding: '4px'
                     }}
@@ -66,7 +58,7 @@ export function NotificationPanel({ onBack }: Props) {
                     </svg>
                 </button>
             </div>
-            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingBottom: '150px' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
                 <Section>
                     {alerts.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: '40px', color: 'var(--tg-theme-hint-color, #999)' }}>
