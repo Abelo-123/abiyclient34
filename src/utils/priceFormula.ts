@@ -22,11 +22,14 @@ export function calculatePriceFormula(
     rateMultiplierInput = 1,
     quantity = 1000,
     discountPercent = 0,
-    adminMarginInput = 1
+    adminMarginInput = 90
 ): PriceFormulaResult {
     const finalRate = serviceRate;
     const resellerMultiplier = rateMultiplierInput > 0 ? rateMultiplierInput : 1;
-    const adminMargin = adminMarginInput > 0 ? adminMarginInput : 1;
+    const rawAdminMargin = adminMarginInput > 0 ? adminMarginInput : 90;
+    
+    // FACTOR B = ((factor b / 100) + 1)
+    const adminMargin = (rawAdminMargin / 100) + 1;
     
     // Derive Provider Base Rate (Factor A) from original_rate if present, or un-dense from finalRate
     const providerRate = originalRateInput && originalRateInput > 0 && originalRateInput !== finalRate
@@ -40,10 +43,10 @@ export function calculatePriceFormula(
     const finalTotal = subtotal - discountAmount;
 
     // Un-densed singular equation: A × B × C
-    const perThousandEquation = `${formatETB(providerRate)} × ${adminMargin.toFixed(2)}x (Admin) × ${resellerMultiplier.toFixed(2)}x (Reseller) = ${formatETB(finalRate)} / 1k`;
+    const perThousandEquation = `${formatETB(providerRate)} × ${adminMargin.toFixed(2)}x (Admin: ${rawAdminMargin}) × ${resellerMultiplier.toFixed(2)}x (Reseller) = ${formatETB(finalRate)} / 1k`;
 
     // Un-densed singular total equation: A × B × C × D
-    const baseEquationStr = `${providerRate.toFixed(2)} × ${adminMargin.toFixed(2)} × ${resellerMultiplier.toFixed(2)} × (${quantity.toLocaleString()} ÷ 1000)`;
+    const baseEquationStr = `${providerRate.toFixed(4)} × ${adminMargin.toFixed(2)} × ${resellerMultiplier.toFixed(2)} × (${quantity.toLocaleString()} ÷ 1000)`;
     
     const totalChargeEquation = discountPercent > 0
         ? `(${baseEquationStr}) - ${discountPercent}% = ${finalTotal.toFixed(4)} ETB`
