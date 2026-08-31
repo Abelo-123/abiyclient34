@@ -138,8 +138,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [isSyncingAlerts, setIsSyncingAlerts] = useState(false);
 
     const [settings, _setSettings] = useState({
-        rateMultiplier: 1,
-        adminMargin: 1,
+        rateMultiplier: 200,
+        adminMargin: 90,
         discountPercent: 0,
         holidayName: '',
         maintenanceMode: false,
@@ -263,10 +263,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     if (settingsData) {
                         const parsedAdminMargin = typeof settingsData.adminMargin === 'number' 
                             ? settingsData.adminMargin 
-                            : (typeof settingsData.profitMargin === 'number' ? settingsData.profitMargin : 1);
-                        const parsedRateMultiplier = typeof settingsData.rateMultiplier === 'number' 
-                            ? settingsData.rateMultiplier 
-                            : 1;
+                            : (typeof settingsData.profitMargin === 'number' ? settingsData.profitMargin : 90);
+                        const parsedRateMultiplier = typeof settingsData.resellerMultiplier === 'number'
+                            ? settingsData.resellerMultiplier
+                            : (typeof settingsData.rateMultiplier === 'number' ? settingsData.rateMultiplier : 200);
                         _setSettings({
                             rateMultiplier: parsedRateMultiplier,
                             adminMargin: parsedAdminMargin,
@@ -343,10 +343,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
                             const oldMultiplier = settings.rateMultiplier;
                             const parsedAdminMargin = typeof settingsData.adminMargin === 'number' 
                                 ? settingsData.adminMargin 
-                                : (typeof (settingsData as any).profitMargin === 'number' ? (settingsData as any).profitMargin : 1);
-                            const parsedRateMultiplier = typeof settingsData.rateMultiplier === 'number' 
-                                ? settingsData.rateMultiplier 
-                                : 1;
+                                : (typeof (settingsData as any).profitMargin === 'number' ? (settingsData as any).profitMargin : 90);
+                            const parsedRateMultiplier = typeof settingsData.resellerMultiplier === 'number'
+                                ? settingsData.resellerMultiplier
+                                : (typeof settingsData.rateMultiplier === 'number' ? settingsData.rateMultiplier : 200);
                             _setSettings({
                                 rateMultiplier: parsedRateMultiplier,
                                 adminMargin: parsedAdminMargin,

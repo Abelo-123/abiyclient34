@@ -292,6 +292,7 @@ export async function fetchReferralStats(): Promise<ReferralStatsResponse> {
 
 export interface AppSettings {
     rateMultiplier: number;
+    resellerMultiplier?: number;
     adminMargin?: number;
     panelMargin?: number;
     profitMargin?: number;
