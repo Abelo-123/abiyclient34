@@ -321,6 +321,15 @@ export const OrderForm = forwardRef<OrderFormHandle, OrderFormProps>(function Or
         return () => disableClosingConfirmation();
     }, [link, quantity, submitting]);
 
+    // Body Scroll Lock while OrderForm modal is mounted
+    useEffect(() => {
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, []);
+
     // Auto-scroll to form when service changes (e.g. from search)
     const containerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -332,14 +341,14 @@ export const OrderForm = forwardRef<OrderFormHandle, OrderFormProps>(function Or
     }, [service.id]);
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" style={{ zIndex: 99999 }} onClick={onClose}>
             <div className="modal-sheet modal-sheet--large" style={{ paddingBottom: '24px' }} onClick={e => e.stopPropagation()}>
                 <div className="modal-header" style={{ position: 'sticky', top: 0, zIndex: 10, background: 'var(--tg-theme-bg-color, #1a1a2e)' }}>
                     <span className="modal-title">Configure Order</span>
                     <Button mode="plain" style={{ padding: 0 }} onClick={onClose}>✕</Button>
                 </div>
                 
-                <div style={{ maxHeight: '80vh', overflowY: 'auto', paddingBottom: '80px' }} ref={containerRef}>
+                <div className="custom-scrollbar" style={{ maxHeight: '80vh', overflowY: 'auto', paddingBottom: '80px' }} ref={containerRef}>
                     <Section
                         header={`Selected Service: ${service.name}`}
                         footer={user && charge > user.balance ? `Insufficient Balance (Have: ${formatETB(user.balance)})` : `Total Charge: ${formatETB(charge)}`}
