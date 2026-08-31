@@ -7,6 +7,7 @@ import { useCategoryServices } from '../../hooks/useCategoryServices';
 import { useApp } from '../../context/AppContext';
 import { TextSkeleton } from '../Skeleton/SkeletonLoader';
 import { useModalLock } from '../../hooks/useModalLock';
+import { calculatePriceFormula } from '../../utils/priceFormula';
 
 interface Props {
     category: string;
@@ -19,7 +20,7 @@ const BATCH_SIZE = 50;
 
 export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Props) {
     useModalLock(onClose);
-    const { isSyncingServices } = useApp();
+    const { isSyncingServices, rateMultiplier } = useApp();
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
     const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
@@ -115,21 +116,27 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                         <Placeholder description="No services match your search" />
                     ) : (
                         <Section header={category}>
-                            {visibleServices.map(svc => (
-                                <div
-                                    key={svc.id}
-                                    className="modal-item"
-                                    onClick={() => onSelect(svc)}
-                                >
-                                    <div className="modal-item-main">
-                                        <div className="modal-item-name">{svc.name}</div>
+                            {visibleServices.map(svc => {
+                                const formula = calculatePriceFormula(svc.rate, svc.original_rate, rateMultiplier);
+                                return (
+                                    <div
+                                        key={svc.id}
+                                        className="modal-item"
+                                        onClick={() => onSelect(svc)}
+                                    >
+                                        <div className="modal-item-main">
+                                            <div className="modal-item-name">{svc.name}</div>
+                                            <div style={{ fontSize: '11px', color: 'var(--accent, #00f5d4)', opacity: 0.9, marginTop: '3px', fontFamily: 'monospace' }}>
+                                                🧮 Formula: {formula.perThousandEquation}
+                                            </div>
+                                        </div>
+                                        <div className="modal-item-id">ID: {svc.id}</div>
+                                        <div className="modal-item-price">
+                                            {showRateSkeleton ? <TextSkeleton width={45} height={12} /> : formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span>
+                                        </div>
                                     </div>
-                                    <div className="modal-item-id">ID: {svc.id}</div>
-                                    <div className="modal-item-price">
-                                        {showRateSkeleton ? <TextSkeleton width={45} height={12} /> : formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </Section>
                     )}
                 </List>

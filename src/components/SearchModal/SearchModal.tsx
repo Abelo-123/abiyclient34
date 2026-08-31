@@ -7,6 +7,7 @@ import { useAllServices } from '../../hooks/useAllServices';
 import { useApp } from '../../context/AppContext';
 import { TextSkeleton } from '../Skeleton/SkeletonLoader';
 import { useModalLock } from '../../hooks/useModalLock';
+import { calculatePriceFormula } from '../../utils/priceFormula';
 
 interface Props {
     onClose: () => void;
@@ -14,7 +15,7 @@ interface Props {
 
 export function SearchModal({ onClose }: Props) {
     useModalLock(onClose);
-    const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab, isSyncingServices } = useApp();
+    const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab, isSyncingServices, rateMultiplier } = useApp();
     const [search, setSearch] = useState('');
     const { data: services = [], isLoading, isFetching } = useAllServices();
     const showRateSkeleton = isSyncingServices || isFetching;
@@ -134,21 +135,27 @@ export function SearchModal({ onClose }: Props) {
                     ) : (
                         Array.from(grouped.entries()).map(([category, svcs]) => (
                             <Section key={category} header={category}>
-                                {svcs.map(svc => (
-                                    <div
-                                        key={svc.id}
-                                        className="modal-item"
-                                        onClick={() => handleSelectSearchResult(svc)}
-                                    >
-                                        <div className="modal-item-main">
-                                            <div className="modal-item-name">{svc.name}</div>
+                                {svcs.map(svc => {
+                                    const formula = calculatePriceFormula(svc.rate, svc.original_rate, rateMultiplier);
+                                    return (
+                                        <div
+                                            key={svc.id}
+                                            className="modal-item"
+                                            onClick={() => handleSelectSearchResult(svc)}
+                                        >
+                                            <div className="modal-item-main">
+                                                <div className="modal-item-name">{svc.name}</div>
+                                                <div style={{ fontSize: '11px', color: 'var(--accent, #00f5d4)', opacity: 0.9, marginTop: '3px', fontFamily: 'monospace' }}>
+                                                    🧮 Formula: {formula.perThousandEquation}
+                                                </div>
+                                            </div>
+                                            <div className="modal-item-id">ID: {svc.id}</div>
+                                            <div className="modal-item-price">
+                                                {showRateSkeleton ? <TextSkeleton width={45} height={12} /> : formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span>
+                                            </div>
                                         </div>
-                                        <div className="modal-item-id">ID: {svc.id}</div>
-                                        <div className="modal-item-price">
-                                            {showRateSkeleton ? <TextSkeleton width={45} height={12} /> : formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span>
-                                        </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </Section>
                         ))
                     )}

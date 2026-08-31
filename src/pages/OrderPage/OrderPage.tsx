@@ -5,6 +5,7 @@ import { Section, Cell, Button } from '@telegram-apps/telegram-ui';
 import { PlatformGrid } from '../../components/PlatformGrid/PlatformGrid';
 import { CategoryModal } from '../../components/CategoryModal/CategoryModal';
 import { ServiceModal } from '../../components/ServiceModal/ServiceModal';
+import { calculatePriceFormula } from '../../utils/priceFormula';
 import { NewsTicker } from '../../components/NewsTicker/NewsTicker';
 import { hapticImpact, hapticNotification, getInitDataString } from '../../helpers/telegram';
 import { PhoneVerification } from '../../components/PhoneVerification/PhoneVerification';
@@ -14,7 +15,7 @@ import { TextSkeleton } from '../../components/Skeleton/SkeletonLoader';
 export function OrderPage() {
     const appContext = useApp();
     const {
-        user, refreshOrders, isSyncingServices,
+        user, refreshOrders, isSyncingServices, rateMultiplier,
         recommendedIds, selectedPlatform, selectedCategory, selectedService,
         setSelectedPlatform, setSelectedCategory, setSelectedService,
         showToast, discountPercent, setBalance
@@ -64,6 +65,17 @@ export function OrderPage() {
         const original = (effectiveQuantity / 1000) * selectedService.rate;
         return discountPercent > 0 ? original * (1 - (discountPercent / 100)) : original;
     }, [selectedService, effectiveQuantity, discountPercent]);
+
+    const priceFormula = useMemo(() => {
+        if (!selectedService) return null;
+        return calculatePriceFormula(
+            selectedService.rate,
+            (selectedService as any).original_rate,
+            rateMultiplier || 1,
+            effectiveQuantity > 0 ? effectiveQuantity : 1000,
+            discountPercent || 0
+        );
+    }, [selectedService, rateMultiplier, effectiveQuantity, discountPercent]);
 
 
 
@@ -453,6 +465,52 @@ export function OrderPage() {
                             {Number(totalCharge).toFixed(4)} ETB
                         </span>
                     </div>
+
+                    {priceFormula && (
+                        <div style={{
+                            marginTop: '10px',
+                            padding: '12px 14px',
+                            borderRadius: '12px',
+                            background: 'rgba(0, 245, 212, 0.05)',
+                            border: '1px solid rgba(0, 245, 212, 0.2)',
+                            color: 'var(--tg-theme-text-color, #fff)',
+                            fontSize: '12px',
+                            fontFamily: 'monospace'
+                        }}>
+                            <div style={{ fontWeight: 700, color: 'var(--accent, #00f5d4)', marginBottom: '6px', fontSize: '13px' }}>
+                                🧮 Numerical Price Formula Breakdown (Debug)
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
+                                <span>• Base Rate (per 1k):</span>
+                                <span>{formatETB(priceFormula.originalRate)}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
+                                <span>• Reseller Multiplier:</span>
+                                <span>× {priceFormula.multiplier}x</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
+                                <span>• Rate per 1000:</span>
+                                <span>{formatETB(priceFormula.finalRate)}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
+                                <span>• Unit Price (per 1 qty):</span>
+                                <span>{priceFormula.unitPrice.toFixed(6)} ETB</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
+                                <span>• Quantity Selected:</span>
+                                <span>× {effectiveQuantity.toLocaleString()}</span>
+                            </div>
+                            {discountPercent > 0 && (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', color: '#00d68f' }}>
+                                    <span>• Holiday Discount ({discountPercent}%):</span>
+                                    <span>- {priceFormula.discountAmount.toFixed(4)} ETB</span>
+                                </div>
+                            )}
+                            <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '8px', paddingTop: '6px', color: '#00f5d4', fontWeight: 'bold', wordBreak: 'break-all' }}>
+                                Equation: {priceFormula.totalChargeEquation}
+                            </div>
+                        </div>
+                    )}
 
                     <Button
                         size="l"
