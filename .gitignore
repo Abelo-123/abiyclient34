@@ -38,6 +38,7 @@ powershell.cmd
 scratch/
 migrate_remove_bot_id.js
 test_live_api.js
+PRIMORA_PLATFORM_MASTER_KNOWLEDGE.md
 *.jpg
 *.PNG
 *.sql
