@@ -24,11 +24,13 @@
   --tg-link: var(--tg-theme-link-color, #00f5d4);
 
   /* 5. Faded Subtle Dividers */
-  --tgui--divider-color: rgba(255, 255, 255, 0.04) !important;
-  --tgui--separator-color: rgba(255, 255, 255, 0.04) !important;
+  --tgui--divider: rgba(255, 255, 255, 0.03) !important;
+  --tgui--outline: rgba(255, 255, 255, 0.03) !important;
+  --tgui--divider-color: rgba(255, 255, 255, 0.03) !important;
+  --tgui--separator-color: rgba(255, 255, 255, 0.03) !important;
   
-  /* 5. Structural Elements */
-  --tg-separator: rgba(255, 255, 255, 0.04);
+  /* 6. Structural Elements */
+  --tg-separator: rgba(255, 255, 255, 0.03);
   --tg-header-bg: var(--tg-theme-header-bg-color, #080d19);
 
   /* Mapping for existing components */
@@ -38,15 +40,38 @@
   --text-muted: #8e9aaf;
   --accent: #00f5d4;
   --accent-text: #080d19;
-  --divider: rgba(255, 255, 255, 0.04);
+  --divider: rgba(255, 255, 255, 0.03);
   --accent-primary: #00f5d4;
   --surface-glass: rgba(18, 26, 43, 0.7);
   --surface-elevated: rgba(26, 37, 60, 0.85);
-  --surface-glass-border: rgba(255, 255, 255, 0.04);
+  --surface-glass-border: rgba(255, 255, 255, 0.03);
   
   --gap-xs: 4px; --gap-sm: 8px; --gap-md: 12px; --gap-lg: 16px; --gap-xl: 24px; --gap-2xl: 32px;
   --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;
   --duration-fast: 0.08s; --duration-base: 0.12s; --duration-slow: 0.2s;
+}
+
+/* Faded Dim Dividers for Modal Lists and Telegram UI Cells */
+:root, body, [class*="tgui-"] {
+  --tgui--divider: rgba(255, 255, 255, 0.03) !important;
+  --tgui--outline: rgba(255, 255, 255, 0.03) !important;
+}
+
+[class*="cell"]::after,
+[class*="Cell"]::after,
+[class*="section"]::after,
+[class*="Section"]::after,
+[class*="divider"],
+[class*="Separator"],
+[class*="separator"],
+hr {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.03) !important;
+  opacity: 0.25 !important;
+}
+
+.modal-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
 }
 
 /* Premium Subtitle style */
