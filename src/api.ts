@@ -108,7 +108,7 @@ const SERVICES_TIMESTAMP_KEY = 'primora_services_timestamp';
 const SETTINGS_CACHE_KEY = 'primora_settings_cache';
 const SETTINGS_TIMESTAMP_KEY = 'primora_settings_timestamp';
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache for fast initial loading
-const SETTINGS_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache for fast initial loading
+const SETTINGS_CACHE_DURATION = 3 * 1000; // 3 seconds cache for real-time settings updates
 
 export async function getServices(useCache = true, forceRefresh = false): Promise<Service[]> {
     if (useCache && !forceRefresh) {
