@@ -23,7 +23,8 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
     const deferredSearch = useDeferredValue(search);
     const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
 
-    const { data: categoryServices = [], isLoading: loading, isError } = useCategoryServices(category, recommendedIds);
+    const { data: categoryServices = [], isLoading: loading, isFetching, isError } = useCategoryServices(category, recommendedIds);
+    const showRateSkeleton = isSyncingServices || isFetching;
 
     // 2. Native Back Button Flow
     useEffect(() => {
@@ -194,7 +195,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                                         </span>
                                         <div className="svc-footer" style={{ fontSize: '11px', color: 'var(--tg-theme-hint-color)', marginTop: '2px' }}>
                                             <span className="svc-price" style={{ color: '#00d68f', fontWeight: 'bold' }}>
-                                                {isSyncingServices ? <TextSkeleton width={55} height={12} /> : `${formatETB(svc.rate)} / 1000`}
+                                                {showRateSkeleton ? <TextSkeleton width={55} height={12} /> : `${formatETB(svc.rate)} / 1000`}
                                             </span>
                                             <span className="svc-limits"> | Min: {svc.min} | Max: {svc.max.toLocaleString()}</span>
                                         </div>

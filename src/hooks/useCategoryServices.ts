@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { getServicesByCategory } from '../api';
 import type { Service } from '../types';
 
-export function useCategoryServices(category?: string, ids?: number[]) {
+export function useCategoryServices(category?: string, ids?: number[], forceRefresh = false) {
     return useQuery<Service[]>({
-        queryKey: ['services', 'category', category, ids?.join(',')],
+        queryKey: ['services', 'category', category, ids?.join(','), forceRefresh],
         queryFn: async () => {
             const data = await getServicesByCategory(
                 category,
-                category === 'Top Services' ? ids : undefined
+                category === 'Top Services' ? ids : undefined,
+                forceRefresh
             );
             
             // Transform the Node.js API response to the format used by the frontend
@@ -28,7 +29,6 @@ export function useCategoryServices(category?: string, ids?: number[]) {
             }));
         },
         enabled: !!category || !!(ids && ids.length > 0),
-        placeholderData: (prev) => prev,
-        staleTime: 5 * 60 * 1000, // 5 minutes cache
+        staleTime: 3000, // 3 seconds so rate updates from DB trigger skeleton loader
     });
 }

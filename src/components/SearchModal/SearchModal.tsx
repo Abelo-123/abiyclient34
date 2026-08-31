@@ -14,7 +14,8 @@ interface Props {
 export function SearchModal({ onClose }: Props) {
     const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab, isSyncingServices } = useApp();
     const [search, setSearch] = useState('');
-    const { data: services = [], isLoading } = useAllServices();
+    const { data: services = [], isLoading, isFetching } = useAllServices();
+    const showRateSkeleton = isSyncingServices || isFetching;
 
     useEffect(() => {
         try {
@@ -153,7 +154,7 @@ export function SearchModal({ onClose }: Props) {
                                         </div>
                                         <div className="modal-item-id">ID: {svc.id}</div>
                                         <div className="modal-item-price">
-                                            {isSyncingServices ? <TextSkeleton width={45} height={12} /> : formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span>
+                                            {showRateSkeleton ? <TextSkeleton width={45} height={12} /> : formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span>
                                         </div>
                                     </div>
                                 ))}

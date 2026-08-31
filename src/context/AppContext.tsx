@@ -167,6 +167,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 custom_description: s.custom_description,
             }));
             setServices(transformed);
+            queryClient.invalidateQueries({ queryKey: ['services'] });
         } catch (err) {
             console.error('Failed to fetch services:', err);
         } finally {
@@ -318,7 +319,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
                                 cancel: s.cancel,
                                 custom_description: s.custom_description,
                             }));
-                            if (transformed.length > 0) setServices(transformed);
+                            if (transformed.length > 0) {
+                                setServices(transformed);
+                                queryClient.invalidateQueries({ queryKey: ['services'] });
+                            }
                         } catch (err) {
                             console.error('Failed to load real-time services:', err);
                         }
@@ -327,6 +331,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     (async () => {
                         try {
                             const settingsData = await api.getSettings(false, true);
+                            const oldMultiplier = settings.rateMultiplier;
                             _setSettings({
                                 rateMultiplier: settingsData.rateMultiplier || 1,
                                 discountPercent: settingsData.discountPercent || 0,
@@ -337,6 +342,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
                                 topServicesIds: settingsData.topServicesIds || '',
                                 botUsername: settingsData.botUsername || 'Primora444_bot',
                             });
+
+                            if (oldMultiplier !== settingsData.rateMultiplier) {
+                                queryClient.invalidateQueries({ queryKey: ['services'] });
+                            }
 
                             if (settingsData.topServicesIds) {
                                 const parsedIds = settingsData.topServicesIds
