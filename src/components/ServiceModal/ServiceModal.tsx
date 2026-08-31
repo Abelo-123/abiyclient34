@@ -26,19 +26,25 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
     const { data: categoryServices = [], isLoading: loading, isFetching, isError } = useCategoryServices(category, recommendedIds);
     const showRateSkeleton = isSyncingServices || isFetching;
 
-    // 2. Native Back Button Flow
+    // 2. Native Back Button Flow & Body Scroll Lock
     useEffect(() => {
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
         try {
             showBackButton();
             const off = onBackButtonClick(() => {
                 onClose();
             });
             return () => {
+                document.body.style.overflow = prev;
                 off();
                 hideBackButton();
             };
         } catch (e) {
             console.error('Back button setup failed', e);
+            return () => {
+                document.body.style.overflow = prev;
+            };
         }
     }, [onClose]);
 
@@ -67,10 +73,13 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
+            width: '100vw',
+            height: '100dvh',
             backgroundColor: 'var(--tg-theme-bg-color, #1a1a2e)',
-            zIndex: 9999,
+            zIndex: 99999,
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'hidden',
             animation: 'slideUp 0.3s ease-out'
         }}>
             <div style={{

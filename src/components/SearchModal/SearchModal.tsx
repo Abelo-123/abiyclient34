@@ -18,17 +18,23 @@ export function SearchModal({ onClose }: Props) {
     const showRateSkeleton = isSyncingServices || isFetching;
 
     useEffect(() => {
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
         try {
             showBackButton();
             const off = onBackButtonClick(() => {
                 onClose();
             });
             return () => {
+                document.body.style.overflow = prev;
                 off();
                 hideBackButton();
             };
         } catch (e) {
             console.error('Back button setup failed', e);
+            return () => {
+                document.body.style.overflow = prev;
+            };
         }
     }, [onClose]);
 
@@ -83,10 +89,13 @@ export function SearchModal({ onClose }: Props) {
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'var(--tg-theme-bg-color, #ffffff)',
-            zIndex: 9999,
+            width: '100vw',
+            height: '100dvh',
+            backgroundColor: 'var(--tg-theme-bg-color, #1a1a2e)',
+            zIndex: 99999,
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'hidden',
             animation: 'slideUp 0.3s ease-out'
         }}>
             <div style={{
