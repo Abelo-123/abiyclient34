@@ -117,8 +117,8 @@ const SETTINGS_TIMESTAMP_KEY = 'primora_settings_timestamp';
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache for fast initial loading
 const SETTINGS_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache for fast initial loading
 
-export async function getServices(useCache = true): Promise<Service[]> {
-    if (useCache) {
+export async function getServices(useCache = true, forceRefresh = false): Promise<Service[]> {
+    if (useCache && !forceRefresh) {
         try {
             const cached = localStorage.getItem(SERVICES_CACHE_KEY);
             const timestamp = localStorage.getItem(SERVICES_TIMESTAMP_KEY);
@@ -135,7 +135,8 @@ export async function getServices(useCache = true): Promise<Service[]> {
     }
 
     try {
-        const data = await nodeApiFetch<any>('/services');
+        const endpoint = forceRefresh ? '/services?refresh=1' : '/services';
+        const data = await nodeApiFetch<any>(endpoint);
         const validData = Array.isArray(data) ? data : [];
         if (validData.length > 0) {
             localStorage.setItem(SERVICES_CACHE_KEY, JSON.stringify(validData));
@@ -306,8 +307,8 @@ export interface AppSettings {
     botUsername?: string;
 }
 
-export async function getSettings(useCache = true): Promise<AppSettings> {
-    if (useCache) {
+export async function getSettings(useCache = true, forceRefresh = false): Promise<AppSettings> {
+    if (useCache && !forceRefresh) {
         const cached = localStorage.getItem(SETTINGS_CACHE_KEY);
         const timestamp = localStorage.getItem(SETTINGS_TIMESTAMP_KEY);
         if (cached && timestamp) {
@@ -319,7 +320,8 @@ export async function getSettings(useCache = true): Promise<AppSettings> {
     }
 
     try {
-        const data = await nodeApiFetch<AppSettings>('/app/settings');
+        const endpoint = forceRefresh ? '/app/settings?refresh=1' : '/app/settings';
+        const data = await nodeApiFetch<AppSettings>(endpoint);
         localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(data));
         localStorage.setItem(SETTINGS_TIMESTAMP_KEY, Date.now().toString());
         return data;

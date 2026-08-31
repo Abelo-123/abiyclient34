@@ -74,46 +74,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // Track whether we've logged the user's initData payload to the backend
     const initDataLoggedRef = useRef(false);
 
-    const USER_CACHE_KEY = 'primora_user_cache';
-
-    const [user, setUserState] = useState<UserProfile | null>(() => {
-        try {
-            const cachedStr = localStorage.getItem(USER_CACHE_KEY);
-            const cached = cachedStr ? JSON.parse(cachedStr) : null;
-            const tgUser = getInitDataUser();
-
-            if (tgUser) {
-                const displayName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || 'User';
-                return {
-                    id: tgUser.id,
-                    first_name: tgUser.first_name || (cached?.first_name || 'User'),
-                    last_name: tgUser.last_name || (cached?.last_name || ''),
-                    username: tgUser.username || (cached?.username || ''),
-                    display_name: displayName,
-                    photo_url: tgUser.photo_url || (cached?.photo_url || ''),
-                    balance: cached?.balance !== undefined ? parseFloat(cached.balance) : 0,
-                    referral_code: cached?.referral_code,
-                    referred_by: cached?.referred_by,
-                    refers: cached?.refers,
-                    phone_number: cached?.phone_number,
-                    phone_verified: cached?.phone_verified,
-                };
-            }
-
-            if (cached) return cached;
-        } catch (e) { }
-        return null;
-    });
-
-    const setUser = useCallback((newUser: UserProfile | null | ((prev: UserProfile | null) => UserProfile | null)) => {
-        setUserState(prev => {
-            const updated = typeof newUser === 'function' ? newUser(prev) : newUser;
-            if (updated) {
-                try { localStorage.setItem(USER_CACHE_KEY, JSON.stringify(updated)); } catch (e) {}
-            }
-            return updated;
-        });
-    }, []);
+    const [user, setUser] = useState<UserProfile | null>(null);
     const [services, setServices] = useState<Service[]>([]);
     const [recommendedIds, setRecommendedIds] = useState<number[]>([]);
     const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform | null>(null);
@@ -138,7 +99,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const refreshServices = useCallback(async () => {
         try {
-            const data = await api.getServices(false);
+            // Force refresh from live DB / upstream
+            const data = await api.getServices(false, true);
             const transformed: Service[] = data.map((s: any) => ({
                 id: s.service || s.id,
                 category: s.category,
@@ -208,6 +170,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const loadData = async () => {
             let hasCachedServices = false;
+
+            // Phase 1: Instant Display (0ms latency from localStorage)
             try {
                 const cachedServices = localStorage.getItem('primora_services_cache');
                 if (cachedServices) {
@@ -256,18 +220,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 }
             } catch (e) { }
 
+            // If we have cached services, hide loader immediately so user can explore right away
             if (!hasCachedServices) {
                 setIsLoading(true);
+            } else {
+                setIsLoading(false);
             }
 
+            // Phase 2 & 3: Background Real-Time Data Pipeline
             try {
                 const initData = await getInitDataString();
 
+                // 2a. Priority 1: User Auth & Balance (instant DB query)
+                if (initData) {
+                    api.getBalance(initData).then(res => {
+                        if (res.success) setBalance(res.balance);
+                    }).catch(() => { });
+                }
+
+                // 2b. Priority 2: Real-time Services & Settings from DB (forceRefresh = true)
                 await Promise.allSettled([
-                    // 1. Load services (background or initial)
                     (async () => {
                         try {
-                            const servicesData = await api.getServices(true);
+                            const servicesData = await api.getServices(false, true);
                             const transformed: Service[] = servicesData.map((s: any) => ({
                                 id: s.service || s.id,
                                 category: s.category,
@@ -284,14 +259,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
                             }));
                             if (transformed.length > 0) setServices(transformed);
                         } catch (err) {
-                            console.error('Failed to load services:', err);
+                            console.error('Failed to load real-time services:', err);
                         }
                     })(),
 
-                    // 2. Load settings (background or initial)
                     (async () => {
                         try {
-                            const settingsData = await api.getSettings(true);
+                            const settingsData = await api.getSettings(false, true);
                             _setSettings({
                                 rateMultiplier: settingsData.rateMultiplier || 1,
                                 discountPercent: settingsData.discountPercent || 0,
@@ -313,21 +287,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
                                 setRecommendedIds([]);
                             }
                         } catch (err) {
-                            console.error('Failed to load settings:', err);
-                        }
-                    })(),
-
-                    // 3. Load user init data
-                    (async () => {
-                        if (initData) {
-                            refreshDeposits();
-                            refreshOrders();
-                            api.getBalance(initData).then(res => {
-                                if (res.success) setBalance(res.balance);
-                            }).catch(() => { });
+                            console.error('Failed to load real-time settings:', err);
                         }
                     })()
                 ]);
+
+                // 2c. Priority 3: User Activity & History (orders, deposits, alerts)
+                if (initData) {
+                    refreshDeposits();
+                    refreshOrders();
+                }
             } finally {
                 setIsLoading(false);
             }
@@ -336,13 +305,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }, [refreshServices, refreshDeposits, refreshOrders]);
 
     const setBalance = useCallback((balance: number) => {
-        setUser(prev => {
-            if (!prev) return prev;
-            const updated = { ...prev, balance };
-            try { localStorage.setItem(USER_CACHE_KEY, JSON.stringify(updated)); } catch (e) {}
-            return updated;
-        });
-    }, [setUser]);
+        setUser(prev => prev ? { ...prev, balance } : prev);
+    }, []);
 
     const showToast = useCallback((type: ToastMessage['type'], message: string) => {
         const id = Date.now().toString() + Math.random().toString(36).slice(2);
