@@ -261,15 +261,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 if (cachedSettings) {
                     const settingsData = JSON.parse(cachedSettings);
                     if (settingsData) {
-                        const parsedAdminMargin = settingsData.adminMargin 
-                            || settingsData.profitMargin 
-                            || settingsData.panelMargin 
-                            || settingsData.admin_margin 
-                            || settingsData.profit_margin 
-                            || settingsData.rateMultiplier 
-                            || 1;
+                        const parsedAdminMargin = typeof settingsData.adminMargin === 'number' 
+                            ? settingsData.adminMargin 
+                            : (typeof settingsData.profitMargin === 'number' ? settingsData.profitMargin : 92);
+                        const parsedRateMultiplier = typeof settingsData.rateMultiplier === 'number' 
+                            ? settingsData.rateMultiplier 
+                            : 201;
                         _setSettings({
-                            rateMultiplier: settingsData.rateMultiplier || 1,
+                            rateMultiplier: parsedRateMultiplier,
                             adminMargin: parsedAdminMargin,
                             discountPercent: settingsData.discountPercent || 0,
                             holidayName: settingsData.holidayName || '',
@@ -342,15 +341,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
                         try {
                             const settingsData = await api.getSettings(false, true);
                             const oldMultiplier = settings.rateMultiplier;
-                            const parsedAdminMargin = settingsData.adminMargin 
-                                || settingsData.profitMargin 
-                                || settingsData.panelMargin 
-                                || settingsData.admin_margin 
-                                || settingsData.profit_margin 
-                                || settingsData.rateMultiplier 
-                                || 1;
+                            const parsedAdminMargin = typeof settingsData.adminMargin === 'number' 
+                                ? settingsData.adminMargin 
+                                : (typeof (settingsData as any).profitMargin === 'number' ? (settingsData as any).profitMargin : 92);
+                            const parsedRateMultiplier = typeof settingsData.rateMultiplier === 'number' 
+                                ? settingsData.rateMultiplier 
+                                : 201;
                             _setSettings({
-                                rateMultiplier: settingsData.rateMultiplier || 1,
+                                rateMultiplier: parsedRateMultiplier,
                                 adminMargin: parsedAdminMargin,
                                 discountPercent: settingsData.discountPercent || 0,
                                 holidayName: settingsData.holidayName || '',
