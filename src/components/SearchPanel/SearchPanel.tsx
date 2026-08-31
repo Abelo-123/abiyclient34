@@ -3,6 +3,8 @@ import type { Service } from '../../types';
 import { formatETB } from '../../constants';
 import { getServices } from '../../api';
 import { Input } from '@telegram-apps/telegram-ui';
+import { useApp } from '../../context/AppContext';
+import { TextSkeleton } from '../Skeleton/SkeletonLoader';
 
 interface Props {
     onSelect: (service: Service) => void;
@@ -10,6 +12,7 @@ interface Props {
 }
 
 export function SearchPanel({ onSelect, onClose }: Props) {
+    const { isSyncingServices } = useApp();
     const [search, setSearch] = useState('');
     const [rawServices, setRawServices] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -114,7 +117,9 @@ export function SearchPanel({ onSelect, onClose }: Props) {
                                 </div>
                                 <div className="search-result-card__meta-right">
                                     <span className="search-result-card__speed">FAST START</span>
-                                    <span className="search-result-card__price">{formatETB(svc.rate)} / 1K</span>
+                                    <span className="search-result-card__price">
+                                        {isSyncingServices ? <TextSkeleton width={45} height={12} /> : `${formatETB(svc.rate)} / 1K`}
+                                    </span>
                                 </div>
                             </div>
                         </div>

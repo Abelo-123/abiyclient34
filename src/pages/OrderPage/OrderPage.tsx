@@ -8,12 +8,13 @@ import { ServiceModal } from '../../components/ServiceModal/ServiceModal';
 import { NewsTicker } from '../../components/NewsTicker/NewsTicker';
 import { hapticImpact, hapticNotification, getInitDataString } from '../../helpers/telegram';
 import { PhoneVerification } from '../../components/PhoneVerification/PhoneVerification';
+import { TextSkeleton } from '../../components/Skeleton/SkeletonLoader';
 
 
 export function OrderPage() {
     const appContext = useApp();
     const {
-        user, refreshOrders,
+        user, refreshOrders, isSyncingServices,
         recommendedIds, selectedPlatform, selectedCategory, selectedService,
         setSelectedPlatform, setSelectedCategory, setSelectedService,
         showToast, discountPercent, setBalance
@@ -364,7 +365,7 @@ export function OrderPage() {
                         <div className="order-details-card__row">
                             <span>Rate per 1000</span>
                             <span className="bold highlight">
-                                {formatETB(selectedService.rate)}
+                                {isSyncingServices ? <TextSkeleton width={60} height={14} /> : formatETB(selectedService.rate)}
                             </span>
                         </div>
                     </div>

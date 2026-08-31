@@ -4,6 +4,8 @@ import { onBackButtonClick, showBackButton, hideBackButton } from '@telegram-app
 import type { Service } from '../../types';
 import { formatETB } from '../../constants';
 import { useCategoryServices } from '../../hooks/useCategoryServices';
+import { useApp } from '../../context/AppContext';
+import { TextSkeleton } from '../Skeleton/SkeletonLoader';
 
 interface Props {
     category: string;
@@ -16,6 +18,7 @@ const BATCH_SIZE = 50;
 
 
 export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Props) {
+    const { isSyncingServices } = useApp();
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
     const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
@@ -191,7 +194,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                                         </span>
                                         <div className="svc-footer" style={{ fontSize: '11px', color: 'var(--tg-theme-hint-color)', marginTop: '2px' }}>
                                             <span className="svc-price" style={{ color: '#00d68f', fontWeight: 'bold' }}>
-                                                {formatETB(svc.rate)} / 1000
+                                                {isSyncingServices ? <TextSkeleton width={55} height={12} /> : `${formatETB(svc.rate)} / 1000`}
                                             </span>
                                             <span className="svc-limits"> | Min: {svc.min} | Max: {svc.max.toLocaleString()}</span>
                                         </div>

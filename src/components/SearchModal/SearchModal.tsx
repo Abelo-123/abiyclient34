@@ -5,13 +5,14 @@ import type { Service, SocialPlatform } from '../../types';
 import { formatETB } from '../../constants';
 import { useAllServices } from '../../hooks/useAllServices';
 import { useApp } from '../../context/AppContext';
+import { TextSkeleton } from '../Skeleton/SkeletonLoader';
 
 interface Props {
     onClose: () => void;
 }
 
 export function SearchModal({ onClose }: Props) {
-    const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab } = useApp();
+    const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab, isSyncingServices } = useApp();
     const [search, setSearch] = useState('');
     const { data: services = [], isLoading } = useAllServices();
 
@@ -151,7 +152,9 @@ export function SearchModal({ onClose }: Props) {
                                             <div className="modal-item-name">{svc.name}</div>
                                         </div>
                                         <div className="modal-item-id">ID: {svc.id}</div>
-                                        <div className="modal-item-price">{formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span></div>
+                                        <div className="modal-item-price">
+                                            {isSyncingServices ? <TextSkeleton width={45} height={12} /> : formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span>
+                                        </div>
                                     </div>
                                 ))}
                             </Section>

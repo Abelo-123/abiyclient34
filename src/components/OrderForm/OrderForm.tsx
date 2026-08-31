@@ -3,6 +3,7 @@ import { Section, Input, Textarea, Button, Cell } from '@telegram-apps/telegram-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useApp } from '../../context/AppContext';
 import { formatETB, QUANTITY_STEP, getServiceRequirements } from '../../constants';
+import { TextSkeleton } from '../Skeleton/SkeletonLoader';
 import * as api from '../../api';
 import type { Order } from '../../types';
 import {
@@ -31,7 +32,7 @@ export type OrderFormProps = { onClose?: () => void };
 export const OrderForm = forwardRef<OrderFormHandle, OrderFormProps>(function OrderForm({ onClose }, ref) {
     const {
         selectedService, selectedPlatform,
-        discountPercent,
+        discountPercent, isSyncingServices,
         user, userCanOrder, isTelegramApp,
         setBalance, 
         showToast, setActiveTab,
@@ -346,7 +347,7 @@ export const OrderForm = forwardRef<OrderFormHandle, OrderFormProps>(function Or
                         <Cell
                             subtitle={
                                 <>
-                                    {service.min} - {service.max.toLocaleString()} • Rate: {formatETB(service.rate)}
+                                    {service.min} - {service.max.toLocaleString()} • Rate: {isSyncingServices ? <TextSkeleton width={50} height={12} /> : formatETB(service.rate)}
                                 </>
                             }
                             multiline
