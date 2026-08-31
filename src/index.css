@@ -22,9 +22,13 @@
   --tg-accent: var(--tg-theme-button-color, #00f5d4);
   --tg-accent-text: var(--tg-theme-button-text-color, #080d19);
   --tg-link: var(--tg-theme-link-color, #00f5d4);
+
+  /* 5. Faded Subtle Dividers */
+  --tgui--divider-color: rgba(255, 255, 255, 0.04) !important;
+  --tgui--separator-color: rgba(255, 255, 255, 0.04) !important;
   
   /* 5. Structural Elements */
-  --tg-separator: var(--tg-theme-section-separator-color, rgba(255, 255, 255, 0.08));
+  --tg-separator: rgba(255, 255, 255, 0.04);
   --tg-header-bg: var(--tg-theme-header-bg-color, #080d19);
 
   /* Mapping for existing components */
@@ -34,11 +38,11 @@
   --text-muted: #8e9aaf;
   --accent: #00f5d4;
   --accent-text: #080d19;
-  --divider: rgba(255, 255, 255, 0.08);
+  --divider: rgba(255, 255, 255, 0.04);
   --accent-primary: #00f5d4;
   --surface-glass: rgba(18, 26, 43, 0.7);
   --surface-elevated: rgba(26, 37, 60, 0.85);
-  --surface-glass-border: rgba(255, 255, 255, 0.08);
+  --surface-glass-border: rgba(255, 255, 255, 0.04);
   
   --gap-xs: 4px; --gap-sm: 8px; --gap-md: 12px; --gap-lg: 16px; --gap-xl: 24px; --gap-2xl: 32px;
   --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px;

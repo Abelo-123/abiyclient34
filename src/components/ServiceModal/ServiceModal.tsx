@@ -102,10 +102,10 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                 <List>
                     {loading ? (
                         <Section>
-                            {[1, 2, 3, 4, 5, 6].map(i => (
-                                <div key={i} className="skeleton-row">
-                                    <div className="skeleton-bar" style={{ width: '70%' }}></div>
-                                    <div className="skeleton-bar" style={{ width: '40%', opacity: 0.6 }}></div>
+                            {[1, 2, 3, 4, 5].map(i => (
+                                <div key={i} className="skeleton-modal-card">
+                                    <div className="skeleton-shimmer skeleton-modal-bar-title" />
+                                    <div className="skeleton-shimmer skeleton-modal-bar-sub" />
                                 </div>
                             ))}
                         </Section>
