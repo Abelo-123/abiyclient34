@@ -74,7 +74,7 @@ export function OrderPage() {
             rateMultiplier || 1,
             effectiveQuantity > 0 ? effectiveQuantity : 1000,
             discountPercent || 0,
-            adminMargin || 1.2
+            adminMargin || 1
         );
     }, [selectedService, rateMultiplier, adminMargin, effectiveQuantity, discountPercent]);
 

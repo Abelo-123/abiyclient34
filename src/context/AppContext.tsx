@@ -260,8 +260,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 if (cachedSettings) {
                     const settingsData = JSON.parse(cachedSettings);
                     if (settingsData) {
+                        const parsedAdminMargin = settingsData.adminMargin 
+                            || settingsData.profitMargin 
+                            || settingsData.panelMargin 
+                            || settingsData.admin_margin 
+                            || settingsData.profit_margin 
+                            || settingsData.rateMultiplier 
+                            || 1;
                         _setSettings({
                             rateMultiplier: settingsData.rateMultiplier || 1,
+                            adminMargin: parsedAdminMargin,
                             discountPercent: settingsData.discountPercent || 0,
                             holidayName: settingsData.holidayName || '',
                             maintenanceMode: settingsData.maintenanceMode || false,
@@ -333,8 +341,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
                         try {
                             const settingsData = await api.getSettings(false, true);
                             const oldMultiplier = settings.rateMultiplier;
+                            const parsedAdminMargin = settingsData.adminMargin 
+                                || settingsData.profitMargin 
+                                || settingsData.panelMargin 
+                                || settingsData.admin_margin 
+                                || settingsData.profit_margin 
+                                || settingsData.rateMultiplier 
+                                || 1;
                             _setSettings({
                                 rateMultiplier: settingsData.rateMultiplier || 1,
+                                adminMargin: parsedAdminMargin,
                                 discountPercent: settingsData.discountPercent || 0,
                                 holidayName: settingsData.holidayName || '',
                                 maintenanceMode: settingsData.maintenanceMode || false,
@@ -612,7 +628,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         deposits,
         alerts,
         rateMultiplier: settings.rateMultiplier,
-        adminMargin: (settings as any).adminMargin || 1.2,
+        adminMargin: (settings as any).adminMargin || settings.rateMultiplier || 1,
         discountPercent: settings.discountPercent,
         holidayName: settings.holidayName,
         maintenanceMode: settings.maintenanceMode,

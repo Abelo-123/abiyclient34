@@ -292,6 +292,11 @@ export async function fetchReferralStats(): Promise<ReferralStatsResponse> {
 
 export interface AppSettings {
     rateMultiplier: number;
+    adminMargin?: number;
+    panelMargin?: number;
+    profitMargin?: number;
+    admin_margin?: number;
+    profit_margin?: number;
     discountPercent: number;
     holidayName: string;
     maintenanceMode: boolean;

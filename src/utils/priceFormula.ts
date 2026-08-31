@@ -22,11 +22,11 @@ export function calculatePriceFormula(
     rateMultiplierInput = 1,
     quantity = 1000,
     discountPercent = 0,
-    adminMarginInput = 1.2
+    adminMarginInput = 1
 ): PriceFormulaResult {
     const finalRate = serviceRate;
     const resellerMultiplier = rateMultiplierInput > 0 ? rateMultiplierInput : 1;
-    const adminMargin = adminMarginInput > 0 ? adminMarginInput : 1.2;
+    const adminMargin = adminMarginInput > 0 ? adminMarginInput : 1;
     
     // Derive Provider Base Rate (Factor A) from original_rate if present, or un-dense from finalRate
     const providerRate = originalRateInput && originalRateInput > 0 && originalRateInput !== finalRate
