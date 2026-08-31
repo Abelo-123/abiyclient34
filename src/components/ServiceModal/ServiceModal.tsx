@@ -139,7 +139,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                     />
                 </div>
 
-                <div className="modal-custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }} onScroll={handleScroll}>
+                <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }} onScroll={handleScroll}>
                     {loading ? (
                         <div style={{ padding: '16px' }}>
                             {[1, 2, 3, 4, 5].map(i => (

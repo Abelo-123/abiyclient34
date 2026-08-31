@@ -118,7 +118,7 @@ export function CategoryModal({ platform, onSelect, onClose }: Props) {
                     />
                 </div>
 
-                <div className="modal-custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }}>
+                <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }}>
                     {loading ? (
                         <div style={{ padding: '16px' }}>
                             {[1, 2, 3, 4, 5, 6].map(i => (
