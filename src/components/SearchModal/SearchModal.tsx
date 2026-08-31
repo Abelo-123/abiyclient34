@@ -15,7 +15,7 @@ interface Props {
 
 export function SearchModal({ onClose }: Props) {
     useModalLock(onClose);
-    const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab, isSyncingServices, rateMultiplier } = useApp();
+    const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab, isSyncingServices, rateMultiplier, adminMargin } = useApp();
     const [search, setSearch] = useState('');
     const { data: services = [], isLoading, isFetching } = useAllServices();
     const showRateSkeleton = isSyncingServices || isFetching;
@@ -136,7 +136,7 @@ export function SearchModal({ onClose }: Props) {
                         Array.from(grouped.entries()).map(([category, svcs]) => (
                             <Section key={category} header={category}>
                                 {svcs.map(svc => {
-                                    const formula = calculatePriceFormula(svc.rate, svc.original_rate, rateMultiplier);
+                                    const formula = calculatePriceFormula(svc.rate, svc.original_rate, rateMultiplier, 1000, 0, adminMargin);
                                     return (
                                         <div
                                             key={svc.id}

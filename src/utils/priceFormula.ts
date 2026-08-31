@@ -1,17 +1,19 @@
 import { formatETB } from '../constants';
 
 export interface PriceFormulaResult {
-    originalRate: number;
-    multiplier: number;
-    finalRate: number;
-    unitPrice: number;
+    providerRate: number;       // Factor A: Provider Base Rate per 1000
+    adminMargin: number;        // Factor B: Primora Admin Profit Margin
+    resellerMultiplier: number; // Factor C: Reseller Multiplier Baseline
+    unitFactor: number;         // Factor D: (Quantity / 1000)
+    finalRate: number;          // A × B × C
+    unitPrice: number;          // Final Rate / 1000
     quantity: number;
-    subtotal: number;
+    subtotal: number;           // A × B × C × D
     discountPercent: number;
     discountAmount: number;
     finalTotal: number;
-    perThousandEquation: string;
-    totalChargeEquation: string;
+    perThousandEquation: string; // "A × B × C = Rate / 1k"
+    totalChargeEquation: string; // "A × B × C × D = Total ETB"
 }
 
 export function calculatePriceFormula(
@@ -19,31 +21,39 @@ export function calculatePriceFormula(
     originalRateInput?: number,
     rateMultiplierInput = 1,
     quantity = 1000,
-    discountPercent = 0
+    discountPercent = 0,
+    adminMarginInput = 1.2
 ): PriceFormulaResult {
     const finalRate = serviceRate;
-    const multiplier = rateMultiplierInput > 0 ? rateMultiplierInput : 1;
-    // Derive original rate if not explicitly supplied
-    const originalRate = originalRateInput && originalRateInput > 0 
-        ? originalRateInput 
-        : (multiplier !== 1 ? finalRate / multiplier : finalRate);
+    const resellerMultiplier = rateMultiplierInput > 0 ? rateMultiplierInput : 1;
+    const adminMargin = adminMarginInput > 0 ? adminMarginInput : 1.2;
     
+    // Derive Provider Base Rate (Factor A) from original_rate if present, or un-dense from finalRate
+    const providerRate = originalRateInput && originalRateInput > 0 && originalRateInput !== finalRate
+        ? originalRateInput
+        : (finalRate / (adminMargin * resellerMultiplier));
+
+    const unitFactor = quantity / 1000;
     const unitPrice = finalRate / 1000;
-    const subtotal = (quantity / 1000) * finalRate;
+    const subtotal = providerRate * adminMargin * resellerMultiplier * unitFactor;
     const discountAmount = discountPercent > 0 ? subtotal * (discountPercent / 100) : 0;
     const finalTotal = subtotal - discountAmount;
 
-    const perThousandEquation = originalRate !== finalRate
-        ? `(${formatETB(originalRate)} × ${multiplier}x = ${formatETB(finalRate)} / 1k)`
-        : `(${formatETB(finalRate)} / 1k)`;
+    // Un-densed singular equation: A × B × C
+    const perThousandEquation = `${formatETB(providerRate)} × ${adminMargin.toFixed(2)}x (Admin) × ${resellerMultiplier.toFixed(2)}x (Reseller) = ${formatETB(finalRate)} / 1k`;
 
+    // Un-densed singular total equation: A × B × C × D
+    const baseEquationStr = `${providerRate.toFixed(2)} × ${adminMargin.toFixed(2)} × ${resellerMultiplier.toFixed(2)} × (${quantity.toLocaleString()} ÷ 1000)`;
+    
     const totalChargeEquation = discountPercent > 0
-        ? `((${formatETB(finalRate)} ÷ 1000) × ${quantity.toLocaleString()}) - ${discountPercent}% = ${finalTotal.toFixed(4)} ETB`
-        : `(${formatETB(finalRate)} ÷ 1000) × ${quantity.toLocaleString()} = ${finalTotal.toFixed(4)} ETB`;
+        ? `(${baseEquationStr}) - ${discountPercent}% = ${finalTotal.toFixed(4)} ETB`
+        : `${baseEquationStr} = ${finalTotal.toFixed(4)} ETB`;
 
     return {
-        originalRate,
-        multiplier,
+        providerRate,
+        adminMargin,
+        resellerMultiplier,
+        unitFactor,
         finalRate,
         unitPrice,
         quantity,

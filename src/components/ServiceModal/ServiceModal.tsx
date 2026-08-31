@@ -20,7 +20,7 @@ const BATCH_SIZE = 50;
 
 export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Props) {
     useModalLock(onClose);
-    const { isSyncingServices, rateMultiplier } = useApp();
+    const { isSyncingServices, rateMultiplier, adminMargin } = useApp();
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
     const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
@@ -117,7 +117,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                     ) : (
                         <Section header={category}>
                             {visibleServices.map(svc => {
-                                const formula = calculatePriceFormula(svc.rate, svc.original_rate, rateMultiplier);
+                                const formula = calculatePriceFormula(svc.rate, svc.original_rate, rateMultiplier, 1000, 0, adminMargin);
                                 return (
                                     <div
                                         key={svc.id}

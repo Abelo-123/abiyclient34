@@ -15,7 +15,7 @@ import { TextSkeleton } from '../../components/Skeleton/SkeletonLoader';
 export function OrderPage() {
     const appContext = useApp();
     const {
-        user, refreshOrders, isSyncingServices, rateMultiplier,
+        user, refreshOrders, isSyncingServices, rateMultiplier, adminMargin,
         recommendedIds, selectedPlatform, selectedCategory, selectedService,
         setSelectedPlatform, setSelectedCategory, setSelectedService,
         showToast, discountPercent, setBalance
@@ -73,9 +73,10 @@ export function OrderPage() {
             (selectedService as any).original_rate,
             rateMultiplier || 1,
             effectiveQuantity > 0 ? effectiveQuantity : 1000,
-            discountPercent || 0
+            discountPercent || 0,
+            adminMargin || 1.2
         );
-    }, [selectedService, rateMultiplier, effectiveQuantity, discountPercent]);
+    }, [selectedService, rateMultiplier, adminMargin, effectiveQuantity, discountPercent]);
 
 
 
@@ -478,27 +479,27 @@ export function OrderPage() {
                             fontFamily: 'monospace'
                         }}>
                             <div style={{ fontWeight: 700, color: 'var(--accent, #00f5d4)', marginBottom: '6px', fontSize: '13px' }}>
-                                🧮 Numerical Price Formula Breakdown (Debug)
+                                🧮 Singular Numerical Price Equation (Debug)
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
-                                <span>• Base Rate (per 1k):</span>
-                                <span>{formatETB(priceFormula.originalRate)}</span>
+                                <span>• Factor A (Base Provider Rate/1k):</span>
+                                <span>{formatETB(priceFormula.providerRate)}</span>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
-                                <span>• Reseller Multiplier:</span>
-                                <span>× {priceFormula.multiplier}x</span>
+                                <span>• Factor B (Primora Admin Margin):</span>
+                                <span>× {priceFormula.adminMargin.toFixed(2)}x</span>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
-                                <span>• Rate per 1000:</span>
+                                <span>• Factor C (Reseller Multiplier):</span>
+                                <span>× {priceFormula.resellerMultiplier.toFixed(2)}x</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', color: 'var(--accent)', fontWeight: 600 }}>
+                                <span>• Rate per 1000 (A × B × C):</span>
                                 <span>{formatETB(priceFormula.finalRate)}</span>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
-                                <span>• Unit Price (per 1 qty):</span>
-                                <span>{priceFormula.unitPrice.toFixed(6)} ETB</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', opacity: 0.85 }}>
-                                <span>• Quantity Selected:</span>
-                                <span>× {effectiveQuantity.toLocaleString()}</span>
+                                <span>• Factor D (Quantity Units = Qty ÷ 1k):</span>
+                                <span>× {priceFormula.unitFactor}</span>
                             </div>
                             {discountPercent > 0 && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', margin: '3px 0', color: '#00d68f' }}>
@@ -507,7 +508,7 @@ export function OrderPage() {
                                 </div>
                             )}
                             <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '8px', paddingTop: '6px', color: '#00f5d4', fontWeight: 'bold', wordBreak: 'break-all' }}>
-                                Equation: {priceFormula.totalChargeEquation}
+                                Formula (A × B × C × D): {priceFormula.totalChargeEquation}
                             </div>
                         </div>
                     )}

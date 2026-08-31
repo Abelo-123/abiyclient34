@@ -26,6 +26,7 @@ interface AppState {
     deposits: Deposit[];
     alerts: Alert[];
     rateMultiplier: number;
+    adminMargin: number;
     discountPercent: number;
     holidayName: string;
     maintenanceMode: boolean;
@@ -611,6 +612,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         deposits,
         alerts,
         rateMultiplier: settings.rateMultiplier,
+        adminMargin: (settings as any).adminMargin || 1.2,
         discountPercent: settings.discountPercent,
         holidayName: settings.holidayName,
         maintenanceMode: settings.maintenanceMode,
