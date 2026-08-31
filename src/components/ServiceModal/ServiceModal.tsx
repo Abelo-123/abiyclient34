@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useDeferredValue } from 'react';
+import { createPortal } from 'react-dom';
 import { List, Section, Input, Placeholder } from '@telegram-apps/telegram-ui';
 import type { Service } from '../../types';
 import { formatETB } from '../../constants';
@@ -47,14 +48,14 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
         }
     };
 
-    return (
+    return createPortal(
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
             width: '100vw',
             height: '100dvh',
             backgroundColor: 'var(--tg-theme-bg-color, #1a1a2e)',
-            zIndex: 99999,
+            zIndex: 999999,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
@@ -149,6 +150,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                 )}
                 <div className="modal-list-spacer" />
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
