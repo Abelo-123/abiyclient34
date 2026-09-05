@@ -78,13 +78,39 @@ export function useApp(): AppContextType {
     return ctx;
 }
 
+const USER_PROFILE_CACHE_KEY = 'paxyo_user_profile_cache';
+
+const getCachedUserProfile = (): UserProfile | null => {
+    try {
+        const cached = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+        return cached ? JSON.parse(cached) : null;
+    } catch {
+        return null;
+    }
+};
+
+const saveUserProfileCache = (profile: UserProfile) => {
+    try {
+        localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(profile));
+    } catch (e) {
+        console.error('Failed to cache user profile', e);
+    }
+};
+
 export function AppProvider({ children }: { children: ReactNode }) {
     const isTelegramApp = isTelegramEnv();
 
     // Track whether we've logged the user's initData payload to the backend
     const initDataLoggedRef = useRef(false);
 
-    const [user, setUser] = useState<UserProfile | null>(null);
+    const [user, setUserState] = useState<UserProfile | null>(() => getCachedUserProfile());
+
+    const setUser = useCallback((newUser: UserProfile | null) => {
+        setUserState(newUser);
+        if (newUser) {
+            saveUserProfileCache(newUser);
+        }
+    }, []);
     const [services, setServices] = useState<Service[]>([]);
     const [recommendedIds, setRecommendedIds] = useState<number[]>([]);
     const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform | null>(null);
@@ -313,7 +339,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }, [refreshServices, refreshDeposits, refreshOrders]);
 
     const setBalance = useCallback((balance: number) => {
-        setUser(prev => prev ? { ...prev, balance } : prev);
+        setUserState(prev => prev ? { ...prev, balance } : prev);
+        setIsSyncingBalance(false);
     }, []);
 
     const showToast = useCallback((type: ToastMessage['type'], message: string) => {

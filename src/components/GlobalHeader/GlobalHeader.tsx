@@ -16,12 +16,12 @@ export function GlobalHeader({ onSearchClick, onNotificationClick }: Props) {
                 <Avatar 
                     size={48} 
                     src={user?.photo_url} 
-                    acronym={user?.first_name ? user.first_name[0] : 'U'} 
+                    acronym={user?.display_name ? user.display_name[0] : (user?.first_name ? user.first_name[0] : 'U')} 
                     style={{ border: '2px solid rgba(124,92,252,0.4)' }}
                 />
                 <div className="global-header__info">
                     <div className="global-header__name">
-                        {user?.first_name || 'User'} 🕊
+                        {user?.display_name || [user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.username || 'User'} 🕊
                     </div>
                     <div className="global-header__balance" style={{ display: 'flex', alignItems: 'center' }}>
                         {isSyncingBalance && user === null ? (
