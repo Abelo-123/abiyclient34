@@ -10,9 +10,29 @@ interface Props {
     onClose: () => void;
 }
 
+const RECENT_SEARCHES_KEY = 'ziviop_recent_searches';
+
+const loadRecentSearches = (): Service[] => {
+    try {
+        const saved = localStorage.getItem(RECENT_SEARCHES_KEY);
+        return saved ? JSON.parse(saved) : [];
+    } catch {
+        return [];
+    }
+};
+
+const saveRecentSearches = (items: Service[]) => {
+    try {
+        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(items));
+    } catch (e) {
+        console.error('Failed to save recent searches', e);
+    }
+};
+
 export function SearchModal({ onClose }: Props) {
     const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab } = useApp();
     const [search, setSearch] = useState('');
+    const [recentSearches, setRecentSearches] = useState<Service[]>(() => loadRecentSearches());
     const { data: services = [], isLoading } = useAllServices();
 
     useEffect(() => {
@@ -50,7 +70,36 @@ export function SearchModal({ onClose }: Props) {
         return map;
     }, [results]);
 
+    const addRecentSearch = (service: Service) => {
+        setRecentSearches(prev => {
+            const filtered = prev.filter(s => s.id !== service.id);
+            const updated = [service, ...filtered].slice(0, 10);
+            saveRecentSearches(updated);
+            return updated;
+        });
+    };
+
+    const removeRecentSearch = (e: React.MouseEvent, serviceId: number) => {
+        e.stopPropagation();
+        setRecentSearches(prev => {
+            const updated = prev.filter(s => s.id !== serviceId);
+            saveRecentSearches(updated);
+            return updated;
+        });
+    };
+
+    const clearAllRecentSearches = () => {
+        setRecentSearches([]);
+        try {
+            localStorage.removeItem(RECENT_SEARCHES_KEY);
+        } catch (e) {
+            console.error('Failed to clear recent searches', e);
+        }
+    };
+
     const handleSelectSearchResult = (service: Service) => {
+        addRecentSearch(service);
+
         const textToCheck = (service.category + " " + service.name).toLowerCase();
         
         let network: SocialPlatform = 'other';
@@ -135,7 +184,71 @@ export function SearchModal({ onClose }: Props) {
                             ))}
                         </Section>
                     ) : search.trim() === '' ? (
-                        <Placeholder description="Start typing to search" />
+                        recentSearches.length > 0 ? (
+                            <Section 
+                                header={
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                        <span>🕒 Recent Searches</span>
+                                        <button 
+                                            onClick={clearAllRecentSearches}
+                                            style={{
+                                                background: 'transparent',
+                                                border: 'none',
+                                                color: 'var(--tg-theme-link-color, #2481cc)',
+                                                fontSize: '12px',
+                                                fontWeight: 500,
+                                                cursor: 'pointer',
+                                                padding: '2px 6px'
+                                            }}
+                                        >
+                                            Clear All
+                                        </button>
+                                    </div>
+                                }
+                            >
+                                {recentSearches.map(svc => (
+                                    <div
+                                        key={svc.id}
+                                        className="modal-item"
+                                        onClick={() => handleSelectSearchResult(svc)}
+                                        style={{ position: 'relative' }}
+                                    >
+                                        <div className="modal-item-main" style={{ paddingRight: '28px' }}>
+                                            <div className="modal-item-name">{svc.name}</div>
+                                        </div>
+                                        <div className="modal-item-id">ID: {svc.id}</div>
+                                        <div className="modal-item-price">
+                                            {formatETB(svc.rate)} <span style={{ fontSize: '10px', opacity: 0.8 }}>/1000</span>
+                                        </div>
+                                        <button
+                                            onClick={(e) => removeRecentSearch(e, svc.id)}
+                                            title="Remove from recent searches"
+                                            style={{
+                                                position: 'absolute',
+                                                right: '12px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                background: 'transparent',
+                                                border: 'none',
+                                                color: 'var(--tg-theme-hint-color, #999)',
+                                                cursor: 'pointer',
+                                                fontSize: '16px',
+                                                padding: '4px 8px',
+                                                borderRadius: '50%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                zIndex: 2
+                                            }}
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                ))}
+                            </Section>
+                        ) : (
+                            <Placeholder description="Start typing to search" />
+                        )
                     ) : results.length === 0 ? (
                         <Placeholder description="No services match your search" />
                     ) : (
