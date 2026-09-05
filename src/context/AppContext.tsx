@@ -36,6 +36,11 @@ interface AppState {
     toasts: ToastMessage[];
     isLoading: boolean;
     unreadAlerts: number;
+    isSyncingBalance: boolean;
+    isSyncingServices: boolean;
+    isSyncingOrders: boolean;
+    isSyncingDeposits: boolean;
+    isSyncingAlerts: boolean;
 }
 
 interface AppActions {
@@ -56,6 +61,11 @@ interface AppActions {
     refreshOrders: () => Promise<void>;
     refreshDeposits: () => Promise<void>;
     refreshAlerts: () => Promise<void>;
+    setIsSyncingBalance: (syncing: boolean) => void;
+    setIsSyncingServices: (syncing: boolean) => void;
+    setIsSyncingOrders: (syncing: boolean) => void;
+    setIsSyncingDeposits: (syncing: boolean) => void;
+    setIsSyncingAlerts: (syncing: boolean) => void;
 }
 
 type AppContextType = AppState & AppActions;
@@ -74,46 +84,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // Track whether we've logged the user's initData payload to the backend
     const initDataLoggedRef = useRef(false);
 
-    const USER_CACHE_KEY = 'paxyo_user_cache';
-
-    const [user, setUserState] = useState<UserProfile | null>(() => {
-        try {
-            const cachedStr = localStorage.getItem(USER_CACHE_KEY);
-            const cached = cachedStr ? JSON.parse(cachedStr) : null;
-            const tgUser = getInitDataUser();
-
-            if (tgUser) {
-                const displayName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || 'User';
-                return {
-                    id: tgUser.id,
-                    first_name: tgUser.first_name || (cached?.first_name || 'User'),
-                    last_name: tgUser.last_name || (cached?.last_name || ''),
-                    username: tgUser.username || (cached?.username || ''),
-                    display_name: displayName,
-                    photo_url: tgUser.photo_url || (cached?.photo_url || ''),
-                    balance: cached?.balance !== undefined ? parseFloat(cached.balance) : 0,
-                    referral_code: cached?.referral_code,
-                    referred_by: cached?.referred_by,
-                    refers: cached?.refers,
-                    phone_number: cached?.phone_number,
-                    phone_verified: cached?.phone_verified,
-                };
-            }
-
-            if (cached) return cached;
-        } catch (e) { }
-        return null;
-    });
-
-    const setUser = useCallback((newUser: UserProfile | null | ((prev: UserProfile | null) => UserProfile | null)) => {
-        setUserState(prev => {
-            const updated = typeof newUser === 'function' ? newUser(prev) : newUser;
-            if (updated) {
-                try { localStorage.setItem(USER_CACHE_KEY, JSON.stringify(updated)); } catch (e) {}
-            }
-            return updated;
-        });
-    }, []);
+    const [user, setUser] = useState<UserProfile | null>(null);
     const [services, setServices] = useState<Service[]>([]);
     const [recommendedIds, setRecommendedIds] = useState<number[]>([]);
     const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform | null>(null);
@@ -125,6 +96,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const [toasts, setToasts] = useState<ToastMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [unreadAlerts, setUnreadAlerts] = useState(0);
+    const [isSyncingBalance, setIsSyncingBalance] = useState(true);
+    const [isSyncingServices, setIsSyncingServices] = useState(false);
+    const [isSyncingOrders, setIsSyncingOrders] = useState(false);
+    const [isSyncingDeposits, setIsSyncingDeposits] = useState(false);
+    const [isSyncingAlerts, setIsSyncingAlerts] = useState(false);
     const [settings, _setSettings] = useState({
         rateMultiplier: 1,
         discountPercent: 0,
@@ -337,13 +313,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }, [refreshServices, refreshDeposits, refreshOrders]);
 
     const setBalance = useCallback((balance: number) => {
-        setUser(prev => {
-            if (!prev) return prev;
-            const updated = { ...prev, balance };
-            try { localStorage.setItem(USER_CACHE_KEY, JSON.stringify(updated)); } catch (e) {}
-            return updated;
-        });
-    }, [setUser]);
+        setUser(prev => prev ? { ...prev, balance } : prev);
+    }, []);
 
     const showToast = useCallback((type: ToastMessage['type'], message: string) => {
         const id = Date.now().toString() + Math.random().toString(36).slice(2);
@@ -582,6 +553,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         toasts,
         isLoading,
         unreadAlerts,
+        isSyncingBalance,
+        isSyncingServices,
+        isSyncingOrders,
+        isSyncingDeposits,
+        isSyncingAlerts,
         setUser,
         setActiveTab: handleSetActiveTab,
         setSelectedPlatform: handleSetSelectedPlatform,
@@ -599,10 +575,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
         refreshOrders: async () => { await refreshOrders(); },
         refreshDeposits,
         refreshAlerts,
+        setIsSyncingBalance,
+        setIsSyncingServices,
+        setIsSyncingOrders,
+        setIsSyncingDeposits,
+        setIsSyncingAlerts,
     }), [
         user, isTelegramApp, services, recommendedIds, selectedPlatform,
         selectedCategory, selectedService, orders, deposits, alerts,
         settings, activeTab, toasts, isLoading, unreadAlerts,
+        isSyncingBalance, isSyncingServices, isSyncingOrders, isSyncingDeposits, isSyncingAlerts,
         handleSetActiveTab, handleSetSelectedPlatform, handleSetSelectedService,
         showToast, removeToast, refreshServices, refreshOrders, refreshDeposits, refreshAlerts, setBalance
     ]);

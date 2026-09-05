@@ -1,9 +1,11 @@
 import React, { useState, useMemo, useDeferredValue, useEffect } from 'react';
-// Removed unused imports
+import { createPortal } from 'react-dom';
 import { onBackButtonClick, showBackButton, hideBackButton } from '@telegram-apps/sdk-react';
 import type { SocialPlatform } from '../../types';
 import { useCategories } from '../../hooks/useCategories';
 import { PLATFORM_ICONS } from '../../components/PlatformGrid/PlatformGrid';
+import { useModalLock } from '../../hooks/useModalLock';
+import { CardSkeleton } from '../Skeleton/SkeletonLoader';
 
 interface Props {
     platform: SocialPlatform;
@@ -12,9 +14,10 @@ interface Props {
 }
 
 export function CategoryModal({ platform, onSelect, onClose }: Props) {
+    useModalLock(true);
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
-    const { data: rawCategories = [], isLoading: loading } = useCategories(platform);
+    const { data: rawCategories = [], derivedFromServices = [], isLoading: loading } = useCategories(platform);
 
     useEffect(() => {
         try {
@@ -33,8 +36,8 @@ export function CategoryModal({ platform, onSelect, onClose }: Props) {
 
     const categories = useMemo(() => {
         if (platform === 'top') return ['Top Services'];
-        return rawCategories;
-    }, [rawCategories, platform]);
+        return rawCategories.length > 0 ? rawCategories : derivedFromServices;
+    }, [rawCategories, derivedFromServices, platform]);
 
     const filtered = useMemo(() => {
         if (!deferredSearch.trim()) return categories;
@@ -42,7 +45,9 @@ export function CategoryModal({ platform, onSelect, onClose }: Props) {
         return categories.filter(c => c.toLowerCase().includes(q));
     }, [categories, deferredSearch]);
 
-    return (
+    const showSkeletons = loading && categories.length === 0;
+
+    return createPortal(
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
@@ -118,14 +123,11 @@ export function CategoryModal({ platform, onSelect, onClose }: Props) {
                     />
                 </div>
 
-                <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }}>
-                    {loading ? (
+                <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }}>
+                    {showSkeletons ? (
                         <div style={{ padding: '16px' }}>
                             {[1, 2, 3, 4, 5, 6].map(i => (
-                                <div key={i} className="skeleton-row" style={{ margin: '16px 0' }}>
-                                    <div className="skeleton-bar" style={{ width: '65%' }}></div>
-                                    <div className="skeleton-bar" style={{ width: '25%', opacity: 0.6 }}></div>
-                                </div>
+                                <CardSkeleton key={i} />
                             ))}
                         </div>
                     ) : filtered.length === 0 ? (
@@ -180,6 +182,7 @@ export function CategoryModal({ platform, onSelect, onClose }: Props) {
                     )}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

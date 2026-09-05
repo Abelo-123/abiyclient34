@@ -1,14 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { getServices } from '../api';
 import type { Service } from '../types';
+import { useApp } from '../context/AppContext';
 
 export function useAllServices() {
-    return useQuery<Service[]>({
+    const { services: appServices } = useApp();
+
+    const query = useQuery<Service[]>({
         queryKey: ['services', 'all'],
         queryFn: async () => {
             const data = await getServices(true);
             return data.map((s: any) => ({
-                 id: s.service,
+                 id: s.service || s.id,
                  category: s.category,
                  name: s.name,
                  type: s.type as Service['type'],
@@ -22,6 +25,15 @@ export function useAllServices() {
                  custom_description: s.custom_description,
              }));
         },
-        staleTime: 60 * 1000, // 1 minute
+        placeholderData: appServices,
+        staleTime: 0,
+        refetchOnMount: 'always',
     });
+
+    const data = (query.data && query.data.length > 0) ? query.data : appServices;
+
+    return {
+        ...query,
+        data,
+    };
 }

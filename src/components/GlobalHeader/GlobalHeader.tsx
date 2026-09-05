@@ -1,6 +1,6 @@
 import { useApp } from '../../context/AppContext';
-
 import { Avatar, Button } from '@telegram-apps/telegram-ui';
+import { BadgeSkeleton } from '../Skeleton/SkeletonLoader';
 
 interface Props {
     onSearchClick: () => void;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export function GlobalHeader({ onSearchClick, onNotificationClick }: Props) {
-    const { user, unreadAlerts, setActiveTab } = useApp();
+    const { user, isSyncingBalance, unreadAlerts, setActiveTab } = useApp();
 
     return (
         <div className="global-header">
@@ -23,8 +23,12 @@ export function GlobalHeader({ onSearchClick, onNotificationClick }: Props) {
                     <div className="global-header__name">
                         {user?.first_name || 'User'} 🕊
                     </div>
-                    <div className="global-header__balance">
-                        {user ? `${Number(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ETB` : '0.00 ETB'}
+                    <div className="global-header__balance" style={{ display: 'flex', alignItems: 'center' }}>
+                        {isSyncingBalance && user === null ? (
+                            <BadgeSkeleton style={{ marginRight: '6px' }} />
+                        ) : (
+                            <span>{user ? `${Number(user.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ETB` : '0.00 ETB'}</span>
+                        )}
                         <span 
                             onClick={() => setActiveTab('deposit')} 
                             style={{ marginLeft: 8, color: 'var(--tg-theme-link-color)', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}

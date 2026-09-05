@@ -1,9 +1,11 @@
 import React, { useState, useMemo, useDeferredValue, useEffect } from 'react';
-// Removed unused imports
+import { createPortal } from 'react-dom';
 import { onBackButtonClick, showBackButton, hideBackButton } from '@telegram-apps/sdk-react';
 import type { Service } from '../../types';
 import { formatETB } from '../../constants';
 import { useCategoryServices } from '../../hooks/useCategoryServices';
+import { useModalLock } from '../../hooks/useModalLock';
+import { CardSkeleton, TextSkeleton } from '../Skeleton/SkeletonLoader';
 
 interface Props {
     category: string;
@@ -14,15 +16,14 @@ interface Props {
 
 const BATCH_SIZE = 50;
 
-
 export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Props) {
+    useModalLock(true);
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
     const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
 
-    const { data: categoryServices = [], isLoading: loading, isError } = useCategoryServices(category, recommendedIds);
+    const { data: rawCategoryServices = [], derivedServices = [], isLoading: loading, isError } = useCategoryServices(category, recommendedIds);
 
-    // 2. Native Back Button Flow
     useEffect(() => {
         try {
             showBackButton();
@@ -37,6 +38,10 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
             console.error('Back button setup failed', e);
         }
     }, [onClose]);
+
+    const categoryServices = useMemo(() => {
+        return rawCategoryServices.length > 0 ? rawCategoryServices : derivedServices;
+    }, [rawCategoryServices, derivedServices]);
 
     const filtered = useMemo(() => {
         if (!deferredSearch.trim()) return categoryServices;
@@ -59,7 +64,9 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
         }
     };
 
-    return (
+    const showSkeletons = loading && categoryServices.length === 0;
+
+    return createPortal(
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
@@ -135,14 +142,11 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                     />
                 </div>
 
-                <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }} onScroll={handleScroll}>
-                    {loading ? (
+                <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0 8px 16px' }} onScroll={handleScroll}>
+                    {showSkeletons ? (
                         <div style={{ padding: '16px' }}>
                             {[1, 2, 3, 4, 5].map(i => (
-                                <div key={i} className="skeleton-row" style={{ margin: '16px 0' }}>
-                                    <div className="skeleton-bar" style={{ width: '70%' }}></div>
-                                    <div className="skeleton-bar" style={{ width: '40%', opacity: 0.6 }}></div>
-                                </div>
+                                <CardSkeleton key={i} />
                             ))}
                         </div>
                     ) : isError ? (
@@ -191,7 +195,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                                         </span>
                                         <div className="svc-footer" style={{ fontSize: '11px', color: 'var(--tg-theme-hint-color)', marginTop: '2px' }}>
                                             <span className="svc-price" style={{ color: '#00d68f', fontWeight: 'bold' }}>
-                                                {formatETB(svc.rate)} / 1000
+                                                {svc.rate ? `${formatETB(svc.rate)} / 1000` : <TextSkeleton width={60} />}
                                             </span>
                                             <span className="svc-limits"> | Min: {svc.min} | Max: {svc.max.toLocaleString()}</span>
                                         </div>
@@ -217,6 +221,7 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                     )}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

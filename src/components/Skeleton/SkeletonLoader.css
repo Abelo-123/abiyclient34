@@ -1,0 +1,39 @@
+@keyframes skeletonShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton-shimmer {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.05) 25%,
+        rgba(255, 255, 255, 0.15) 37%,
+        rgba(255, 255, 255, 0.05) 63%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s ease infinite;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.badge-skeleton {
+    width: 60px;
+    height: 18px;
+    border-radius: 12px;
+}
+
+.text-skeleton {
+    width: 80px;
+    height: 16px;
+}
+
+.skeleton-modal-card {
+    height: 68px;
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 8px;
+}

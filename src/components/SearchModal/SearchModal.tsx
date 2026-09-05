@@ -1,10 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { List, Section, Input, Placeholder } from '@telegram-apps/telegram-ui';
 import { onBackButtonClick, showBackButton, hideBackButton } from '@telegram-apps/sdk-react';
 import type { Service, SocialPlatform } from '../../types';
 import { formatETB } from '../../constants';
 import { useAllServices } from '../../hooks/useAllServices';
 import { useApp } from '../../context/AppContext';
+import { useModalLock } from '../../hooks/useModalLock';
 
 interface Props {
     onClose: () => void;
@@ -30,6 +32,7 @@ const saveRecentSearches = (items: Service[]) => {
 };
 
 export function SearchModal({ onClose }: Props) {
+    useModalLock(true);
     const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab } = useApp();
     const [search, setSearch] = useState('');
     const [recentSearches, setRecentSearches] = useState<Service[]>(() => loadRecentSearches());
@@ -126,7 +129,7 @@ export function SearchModal({ onClose }: Props) {
         onClose();
     };
 
-    return (
+    return createPortal(
         <div style={{
             position: 'fixed',
             top: 0, left: 0, right: 0, bottom: 0,
@@ -160,7 +163,7 @@ export function SearchModal({ onClose }: Props) {
                     </svg>
                 </button>
             </div>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }}>
+            <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '16px', paddingTop: '0px', paddingBottom: '150px' }}>
                 <div style={{ padding: '8px 0 12px' }}>
                     <Input
                         inputMode="search"
@@ -273,6 +276,7 @@ export function SearchModal({ onClose }: Props) {
                 </List>
                 <div className="modal-list-spacer" />
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
