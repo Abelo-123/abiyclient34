@@ -32,7 +32,7 @@ const saveRecentSearches = (items: Service[]) => {
 };
 
 export function SearchModal({ onClose }: Props) {
-    useModalLock(true);
+    useModalLock(onClose);
     const { setSelectedPlatform, setSelectedCategory, setSelectedService, setActiveTab } = useApp();
     const [search, setSearch] = useState('');
     const [recentSearches, setRecentSearches] = useState<Service[]>(() => loadRecentSearches());

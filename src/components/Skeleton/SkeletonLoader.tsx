@@ -29,8 +29,11 @@ export function TextSkeleton({ className = '', style, width, height }: SkeletonP
 export function CardSkeleton({ className = '', style, width, height }: SkeletonProps) {
     return (
         <div
-            className={`skeleton-shimmer skeleton-modal-card ${className}`}
+            className={`skeleton-modal-card ${className}`}
             style={{ width, height, ...style }}
-        />
+        >
+            <div className="skeleton-shimmer skeleton-modal-bar-title" />
+            <div className="skeleton-shimmer skeleton-modal-bar-sub" />
+        </div>
     );
 }

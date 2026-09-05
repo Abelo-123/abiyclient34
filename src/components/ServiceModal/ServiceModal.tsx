@@ -17,7 +17,7 @@ interface Props {
 const BATCH_SIZE = 50;
 
 export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Props) {
-    useModalLock(true);
+    useModalLock(onClose);
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
     const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);

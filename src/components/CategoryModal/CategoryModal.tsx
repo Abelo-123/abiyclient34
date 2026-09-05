@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function CategoryModal({ platform, onSelect, onClose }: Props) {
-    useModalLock(true);
+    useModalLock(onClose);
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
     const { data: rawCategories = [], derivedFromServices = [], isLoading: loading } = useCategories(platform);
