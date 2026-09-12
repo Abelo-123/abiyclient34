@@ -294,7 +294,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                     // 2. Load settings (background or initial)
                     (async () => {
                         try {
-                            const settingsData = await api.getSettings(true);
+                            const settingsData = await api.getSettings(false);
                             _setSettings({
                                 rateMultiplier: settingsData.rateMultiplier || 1,
                                 discountPercent: settingsData.discountPercent || 0,

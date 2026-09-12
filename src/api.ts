@@ -108,7 +108,7 @@ const SERVICES_TIMESTAMP_KEY = 'paxyo_services_timestamp';
 const SETTINGS_CACHE_KEY = 'paxyo_settings_cache';
 const SETTINGS_TIMESTAMP_KEY = 'paxyo_settings_timestamp';
 const CACHE_DURATION = 5 * 60 * 1000;
-const SETTINGS_CACHE_DURATION = 15 * 60 * 1000;
+const SETTINGS_CACHE_DURATION = 30 * 1000;
 
 export async function getServices(useCache = true): Promise<Service[]> {
     if (useCache) {
