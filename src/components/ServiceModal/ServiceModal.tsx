@@ -5,6 +5,7 @@ import type { Service } from '../../types';
 import { formatETB } from '../../constants';
 import { useCategoryServices } from '../../hooks/useCategoryServices';
 import { useModalLock } from '../../hooks/useModalLock';
+import { useApp } from '../../context/AppContext';
 import { CardSkeleton, TextSkeleton } from '../Skeleton/SkeletonLoader';
 
 interface Props {
@@ -18,6 +19,7 @@ const BATCH_SIZE = 50;
 
 export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Props) {
     useModalLock(onClose);
+    const { discountPercent } = useApp();
     const [search, setSearch] = useState('');
     const deferredSearch = useDeferredValue(search);
     const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
@@ -159,49 +161,78 @@ export function ServiceModal({ category, recommendedIds, onSelect, onClose }: Pr
                         </div>
                     ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                            {visibleServices.map(svc => (
-                                <div
-                                    key={svc.id}
-                                    onClick={() => onSelect(svc)}
-                                    className="modal-item"
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'flex-start',
-                                        textAlign: 'left',
-                                        padding: '12px 16px',
-                                        borderRadius: '12px',
-                                        cursor: 'pointer',
-                                        transition: 'background 0.15s ease',
-                                        width: '100%',
-                                        gap: '12px'
-                                    }}
-                                >
-                                    <div className="svc-id-pill" style={{ 
-                                        fontSize: '11px', 
-                                        padding: '4px 8px', 
-                                        background: 'rgba(124, 92, 252, 0.15)', 
-                                        color: 'var(--accent)', 
-                                        borderRadius: '6px', 
-                                        fontWeight: 'bold',
-                                        flexShrink: 0
-                                    }}>
-                                        #{svc.id}
-                                    </div>
-                                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                                        <span style={{ fontWeight: '600', fontSize: '13px', color: 'var(--tg-theme-text-color, #fff)', lineHeight: '1.3', wordBreak: 'break-word' }}>
-                                            {svc.name}
-                                        </span>
-                                        <div className="svc-footer" style={{ fontSize: '11px', color: 'var(--tg-theme-hint-color)', marginTop: '2px' }}>
-                                            <span className="svc-price" style={{ color: '#00d68f', fontWeight: 'bold' }}>
-                                                {svc.rate ? `${formatETB(svc.rate)} / 1000` : <TextSkeleton width={60} />}
+                            {visibleServices.map(svc => {
+                                const baseRate = svc.rate;
+                                const finalRate = discountPercent > 0 ? baseRate * (1 - (discountPercent / 100)) : baseRate;
+                                return (
+                                    <div
+                                        key={svc.id}
+                                        onClick={() => onSelect(svc)}
+                                        className="modal-item"
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'flex-start',
+                                            textAlign: 'left',
+                                            padding: '12px 16px',
+                                            borderRadius: '12px',
+                                            cursor: 'pointer',
+                                            transition: 'background 0.15s ease',
+                                            width: '100%',
+                                            gap: '12px'
+                                        }}
+                                    >
+                                        <div className="svc-id-pill" style={{ 
+                                            fontSize: '11px', 
+                                            padding: '4px 8px', 
+                                            background: 'rgba(124, 92, 252, 0.15)', 
+                                            color: 'var(--accent, #818cf8)', 
+                                            borderRadius: '6px', 
+                                            fontWeight: 'bold',
+                                            flexShrink: 0
+                                        }}>
+                                            #{svc.id}
+                                        </div>
+                                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                                            <span style={{ fontWeight: '600', fontSize: '13px', color: 'var(--tg-theme-text-color, #fff)', lineHeight: '1.3', wordBreak: 'break-word' }}>
+                                                {svc.name}
                                             </span>
-                                            <span className="svc-limits"> | Min: {svc.min} | Max: {svc.max.toLocaleString()}</span>
+                                            <div className="svc-footer" style={{ fontSize: '11px', color: 'var(--tg-theme-hint-color, #94a3b8)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                <span>🚀</span>
+                                                {discountPercent > 0 ? (
+                                                    <>
+                                                        <span style={{ textDecoration: 'line-through', color: '#64748b', fontSize: '11px' }}>
+                                                            {formatETB(baseRate)}
+                                                        </span>
+                                                        <span className="svc-price" style={{ color: '#00d68f', fontWeight: 'bold' }}>
+                                                            {formatETB(finalRate)} / 1000
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="svc-price" style={{ color: '#00d68f', fontWeight: 'bold' }}>
+                                                        {svc.rate ? `${formatETB(svc.rate)} / 1000` : <TextSkeleton width={60} />}
+                                                    </span>
+                                                )}
+                                                {discountPercent > 0 && (
+                                                    <span style={{
+                                                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                                        color: '#ffffff',
+                                                        fontSize: '9px',
+                                                        fontWeight: 800,
+                                                        padding: '2px 5px',
+                                                        borderRadius: '4px',
+                                                        lineHeight: '1.2'
+                                                    }}>
+                                                        {discountPercent}% OFF
+                                                    </span>
+                                                )}
+                                                <span className="svc-limits"> | Min: {svc.min} | Max: {svc.max.toLocaleString()}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                             {hasMore && (
                                 <div
                                     style={{
