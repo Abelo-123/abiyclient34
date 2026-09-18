@@ -38,7 +38,7 @@ export function PhoneVerification() {
         setIsLoading(true);
         try {
             const initData = await getInitDataString();
-            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://paxyoback.infinityfreeapp.com'}/otp/send`, {
+            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com'}/otp/send`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ initData, phone_number: formattedPhone })
@@ -66,7 +66,7 @@ export function PhoneVerification() {
         setIsLoading(true);
         try {
             const initData = await getInitDataString();
-            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://paxyoback.infinityfreeapp.com'}/otp/verify`, {
+            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com'}/otp/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ initData, phone_number: phoneNumber, otp })

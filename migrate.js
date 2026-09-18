@@ -73,7 +73,10 @@ async function migrate() {
         CREATE TABLE IF NOT EXISTS orders (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id VARCHAR(255) NOT NULL,
+            bot_id VARCHAR(50),
             service_id INT NOT NULL,
+            service_name VARCHAR(255),
+            reseller_cost DECIMAL(10, 2) DEFAULT 0.00,
             link TEXT NOT NULL,
             target_link TEXT,
             quantity INT NOT NULL,
@@ -86,13 +89,19 @@ async function migrate() {
         )`;
         await conn.execute(createOrders);
         
-        // Add target_link column if it doesn't exist (for existing tables)
+        // Add target_link, reseller_cost, service_name columns if they don't exist
         try {
             await conn.execute('ALTER TABLE orders ADD COLUMN target_link TEXT AFTER service_id');
             console.log('Added target_link column to orders table');
-        } catch (e) {
-            // Column might already exist
-        }
+        } catch (e) {}
+        try {
+            await conn.execute('ALTER TABLE orders ADD COLUMN reseller_cost DECIMAL(10, 2) DEFAULT 0.00 AFTER service_id');
+            console.log('Added reseller_cost column to orders table');
+        } catch (e) {}
+        try {
+            await conn.execute('ALTER TABLE orders ADD COLUMN service_name VARCHAR(255) DEFAULT NULL AFTER service_id');
+            console.log('Added service_name column to orders table');
+        } catch (e) {}
 
         try {
             await conn.execute('CREATE INDEX idx_orders_user_id ON orders(user_id)');

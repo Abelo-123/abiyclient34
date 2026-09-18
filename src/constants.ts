@@ -1,7 +1,7 @@
 import type { SocialPlatform, Service } from './types';
 
 // ─── API Configuration ───────────────────────────────────────
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://paxyoback.infinityfreeapp.com';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://abiyback.onrender.com';
 
 // ─── Social Platforms ─────────────────────────────────────────
 export interface PlatformDef {
