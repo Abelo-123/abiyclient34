@@ -1,5 +1,5 @@
 /**
- * Paxyso Mini App Backend — Node.js Entry Point
+ * Paxyso Mini Afpp Backend — Node.js Entry Point
  */
 import express from 'express';
 import cors from 'cors';
