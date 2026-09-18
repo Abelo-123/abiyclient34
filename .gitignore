@@ -6,6 +6,9 @@ yarn-error.log*
 
 # Environment (keep .env.production tracked — it has only public VITE_ vars)
 .env
+ZIVIOP_PLATFORM_MASTER_KNOWLEDGE.md
+*_MASTER_KNOWLEDGE.md
+DYNAMIC_ENV_DB_OVERVIEW.txt
 .env.local
 .env.*.local
 
