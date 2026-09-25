@@ -6,7 +6,7 @@ import type {
 } from './types';
 import { getInitDataRaw } from './helpers/telegram';
 
-export const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com';
+export const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://abiyback-ldrf.onrender.com';
 
 const isDev = import.meta.env.DEV;
 
@@ -23,7 +23,7 @@ async function nodeApiFetch<T>(
     options?: RequestInit
 ): Promise<T> {
     let url = `${NODE_API_URL}${endpoint}`;
-    
+
     // Prepare headers
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ async function nodeApiFetch<T>(
                 const parsed = JSON.parse(body);
                 if (!parsed.initData) parsed.initData = initData;
                 body = JSON.stringify(parsed);
-            } catch(e) {}
+            } catch (e) { }
         } else if (!body) {
             body = JSON.stringify({ initData });
         }
@@ -59,7 +59,7 @@ async function nodeApiFetch<T>(
         controller = new AbortController();
         signal = controller.signal;
     }
-    
+
     const timeoutId = setTimeout(() => {
         if (controller) controller.abort();
     }, 15000);
@@ -121,10 +121,10 @@ export async function getServices(useCache = true): Promise<Service[]> {
                     try {
                         const parsed = JSON.parse(cached);
                         if (Array.isArray(parsed)) return parsed;
-                    } catch(e) {}
+                    } catch (e) { }
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     try {
@@ -141,7 +141,7 @@ export async function getServices(useCache = true): Promise<Service[]> {
             try {
                 const parsed = JSON.parse(cached);
                 if (Array.isArray(parsed)) return parsed;
-            } catch(e) {}
+            } catch (e) { }
         }
         return [];
     }
@@ -165,7 +165,7 @@ export async function getServicesByCategory(category?: string, ids?: number[]): 
     const params = new URLSearchParams();
     if (category) params.append('category', category);
     if (ids && ids.length > 0) params.append('ids', ids.join(','));
-    
+
     const qs = params.toString() ? `?${params.toString()}` : '';
     const data = await nodeApiFetch<any>(`/services${qs}`);
     return Array.isArray(data) ? data : [];

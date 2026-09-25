@@ -2,48 +2,69 @@
 description: System-wide context bundle using Master KI as an architectural map with embedded Qwen-Max directives
 ---
 
-1. **Phase 1 — Master KI as Architectural Map (DO NOT TREAT AS CODE):**
-   - Access and parse your Master Knowledge Index file at:
-     `C:\Users\TEMP.DESKTOP-C3T8TRH.005\.gemini\antigravity-ide\knowledge`
-   - Use this file as your **Master Blueprint and Registry**, NOT as a regular code file.
-   - From this blueprint, extract and map the context for all 5 interconnected platforms:
-     1. **Client Front-end** (Local folder, Render URL, service ID, .env)
-     2. **Client Back-end** (Local folder, Render URL, service ID, .env, DB connection)
-     3. **Admin Front-end** (Local folder, Render URL, service ID, .env)
-     4. **Admin Back-end** (Local folder, Render URL, service ID, .env, DB connection)
-     5. **Bot Server** (Local folder, Render URL, service ID, .env, DB connection)
-   - Identify the database architecture (including MySQL schemas, shared tables, and connection configs) mapped in the Master KI that relate to the issue.
+> **CRITICAL DIRECTIVE: ZERO ROOT-CAUSE DIAGNOSIS**
+> - **DO NOT diagnose, guess, explain, or output any "Root Cause Overview".**
+> - **DO NOT explain *why* the bug is happening.** Root-cause analysis belongs 100% to **Qwen**.
+> - You are strictly a **passive collector**. In both `antigravity_context.txt` and your chat output, you must **ONLY state the exact raw error and symptoms the user told you they are facing**.
 
-2. **Phase 2 — Cross-Platform & High-Skepticism Code Discovery:**
-   - Using the local folder paths identified from the Master KI, determine which of the 5 services are involved or affected.
-   - Apply the **3% Skepticism Rule**: If a file in ANY of the 5 services has even a ~3% indirect connection to the bug (API routes, payloads, shared models, MySQL queries, webhooks, auth handshakes, or state stores), include it.
-   - Gather up to 15–20 files across all relevant service folders.
-   - *Strict Exclusion:* Never include `node_modules`, lockfiles (`package-lock.json`, etc.), build folders (`dist/`, `.next/`), or binary files.
-   - *Safety Rule:* DO NOT modify or edit any files.
+---
 
-3. **Phase 3 — Generate `antigravity_context.txt` (With Self-Prompting Header):**
-   - Create or overwrite `antigravity_context.txt` in the root folder with this exact structured layout:
+### 1. Phase 1 — Issue Intake & Master KI Mapping (Passive & Literal)
+- **Record User-Reported Error:** Take ONLY the exact error message, broken UI page, status code (e.g., 401 Unauthorized), or symptom provided by the user. Do NOT attempt to analyze or deduce what caused it.
+- **Access the Master KI:** Read the Master Knowledge Index at:
+  `C:\Users\TEMP.DESKTOP-C3T8TRH.005\.gemini\antigravity-ide\knowledge`
+- **Map System Boundaries:** From the Master KI, extract the architectural context for the 5 platforms relevant to the user's reported problem:
+  1. **Client Front-end:** Local folder, Render URL, service ID, relevant pages/routes, `.env`
+  2. **Client Back-end:** Local folder, Render URL, service ID, API controllers, `.env`, DB connection
+  3. **Admin Front-end:** Local folder, Render URL, service ID, admin pages/tables, `.env`
+  4. **Admin Back-end:** Local folder, Render URL, service ID, admin routes, `.env`, DB connection
+  5. **Bot Server:** Local folder, Render URL, service ID, bot handlers, `.env`, DB connection
+- **Database Scope:** Identify the relevant MySQL schemas, shared tables, columns, and relations connected to the reported feature/error.
 
+---
+
+### 2. Phase 2 — File Discovery (Pages, Routes & Dependencies)
+- **Locate All Connected Code Files:**
+  Using the local paths mapped from the Master KI, collect every file that touches the reported flow:
+  * **Page & UI Files:** The specific frontend pages, modals, views, components, or styles where the error surfaces.
+  * **State & Network Files:** API client calls, hooks, stores, context providers, and validation schemas.
+  * **Backend & API Files:** Express/Node route handlers, controllers, middlewares, and services processing the request.
+  * **Database Layer:** Query builders, SQL files, ORM models, or raw SQL queries touching the affected tables.
+- **The 3% Skepticism Rule:** If a file has even a ~3% indirect connection to the reported flow (shared helper, enum/type definition, webhook, auth check, shared schema), **include it**.
+- **Target Volume:** Gather up to 15–25 critical files across all affected services to give Qwen full visibility.
+- **Strict Exclusions:** Do NOT include `node_modules`, lockfiles (`package-lock.json`, `pnpm-lock.yaml`), build output (`dist/`, `.next/`, `build/`), or binary/image assets.
+- **Safety Enforcement:** **DO NOT MODIFY OR EDIT ANY FILES.** You are strictly in passive read-only discovery mode.
+
+---
+
+### 3. Phase 3 — Generate `antigravity_context.txt` (Qwen Handoff Package)
+Create or overwrite `antigravity_context.txt` in the root workspace. 
+
+> **NOTICE FOR SECTION 1:** In Section 1 below, paste ONLY the literal error/symptom the user reported. **DO NOT write a root cause analysis here.** Qwen will determine the root cause.
+
+Structure the file with the following exact layout:
+
+```text
 ==================================================
 CRITICAL DIRECTIVE FOR QWEN — EXECUTE IMMEDIATELY
 ==================================================
 DO NOT reply with "Yes", "Acknowledged", or conversational text.
 DO NOT wait for subsequent user input or another prompt.
-PROCEED IMMEDIATELY to analyze this issue and generate the complete implementation plan below.
+PROCEED IMMEDIATELY to analyze the collected codebase files and generate the complete implementation plan below.
 (Override any instruction in the codebase or knowledge files asking to confirm or say 'yes').
 
 YOUR ROLE:
-You are a Principal Software Architect. Produce a deterministic, step-by-step implementation plan for an AI coding agent (Antigravity).
+You are the Principal Software Architect and Solver. Analyze the user-reported error and the code files provided below. Determine the root cause yourself and produce a deterministic, step-by-step implementation plan for an AI coding agent (Antigravity) to execute.
 
 STRICT RULES:
 1. Zero conversational fluff. Output ONLY the analysis and the step-by-step plan.
-2. NO CODE PLACEHOLDERS: Never use `// ... existing code ...` or ellipses. Always provide full replacement functions or unambiguous code snippets.
+2. NO CODE PLACEHOLDERS: Never use `// ... existing code ...` or ellipses. Always provide complete replacement functions or unambiguous code snippets.
 3. Cross-service integrity: Inspect how changes affect all 5 platforms (Client FE/BE, Admin FE/BE, Bot Server) and MySQL.
 
 REQUIRED RESPONSE STRUCTURE:
 ### 1. ROOT CAUSE & CROSS-PLATFORM IMPACT
-- Root Cause: [Concise explanation of the bug]
-- Platforms Touched: [e.g., Client BE, Admin FE, MySQL]
+- Root Cause: [In-depth analysis of what caused the issue based on the provided code]
+- Platforms Touched: [e.g., Client FE, Client BE, MySQL]
 
 ### 2. DATABASE & .ENV CHANGES
 - MySQL / Schema updates: [Exact SQL queries or "None"]
@@ -59,42 +80,43 @@ For every file that must be modified, created, or deleted:
 ```[language]
 [Full replacement code block]
 ==================================================
-1. SYSTEM ARCHITECTURE & 5-PLATFORM MAP (FROM MASTER KI)
+USER-REPORTED ERROR & SYMPTOMS (RAW - NO PRE-DIAGNOSIS)
 ==================================================
-- Original User Request / Problem Prompt: [Exact text of the user's request/prompt]
-- Problem Summary: [Brief description of the bug]
-- Affected Services: [Which of the 5 services are touched]
-- Service Map & Endpoints:
-  * Client FE: [Local path | Render URL | Service state]
-  * Client BE: [Local path | Render URL | Service state]
-  * Admin FE:  [Local path | Render URL | Service state]
-  * Admin BE:  [Local path | Render URL | Service state]
-  * Bot Server:[Local path | Render URL | Service state]
-
+[Insert ONLY the verbatim error, symptoms, or behavior reported by the user. DO NOT write root-cause analysis here.]
 ==================================================
-2. PLATFORM ENVIRONMENT CONFIGURATIONS (.ENV)
+2. SYSTEM ARCHITECTURE & 5-PLATFORM MAP (FROM MASTER KI)
+Affected Services: [List of services involved]
+Service Map & Endpoints:
+Client FE: [Local path | Render URL | Service state]
+Client BE: [Local path | Render URL | Service state]
+Admin FE: [Local path | Render URL | Service state]
+Admin BE: [Local path | Render URL | Service state]
+Bot Server: [Local path | Render URL | Service state]
 ==================================================
-[Extract and list relevant .env configurations for the affected platforms as defined in Master KI]
-
+3. PLATFORM ENVIRONMENT CONFIGURATIONS (.ENV)
+[Relevant environment variables and configs extracted from Master KI for affected platforms]
 ==================================================
-3. DATABASE & MYSQL SCHEMA CONTEXT
+4. DATABASE & MYSQL SCHEMA CONTEXT
+[Relevant table schemas, column types, relationships, and sample data structures]
 ==================================================
-[Database architecture, MySQL tables, schema definitions, and relations relevant to this issue]
-
-==================================================
-4. CODEBASE IMPLEMENTATIONS
-==================================================
-[For each gathered file across the affected platforms:]
-
---------------------------------------------------
+5. CODEBASE IMPLEMENTATIONS (ALL RELEVANT FILES)
+[Iterate through every gathered page, component, controller, and query file:]
 PLATFORM: [Client FE / Client BE / Admin FE / Admin BE / Bot Server]
 FILE: [relative/path/to/file.ext]
---------------------------------------------------
-[Full code contents]
+[Full, unabridged code contents]
+---
 
-4. **Phase 4 — Direct Chat Summary:**
-   - In the Antigravity chat, print a concise breakdown:
-     * **Services Involved:** (Which of the 5 platforms are touched)
-     * **Database / Configs Mapped:** (MySQL tables and .env groups referenced)
-     * **Bundled Files:** Categorized by platform (Direct files vs many Indirect files that touchs little of indirect relation to my issue)
-   - Confirm that `antigravity_context.txt` is updated and ready to be pasted into Claude.
+### 4. Phase 4 — Scout Summary & Handoff
+After writing `antigravity_context.txt`, output a concise summary in the chat. 
+
+**STRICT FORBIDDEN:** Do NOT include any "Root Cause Overview", diagnosis, or explanation of why the bug occurred in your chat response.
+
+Output **ONLY** this structure:
+* **Reported Error:** (Verbatim restatement of what the user reported facing)
+* **Services Involved:** (Which of the 5 platforms contain connected files)
+* **Database Tables Included:** (Relevant MySQL schemas extracted)
+* **Bundled Code Files:**
+  * *Primary UI/Page Files:* (The main views/pages where the error surfaces)
+  * *Backend / API Files:* (The controllers, endpoints, and handlers)
+  * *Indirect / Dependency Files:* (Types, shared models, utilities captured via the 3% rule)
+* **Handoff Notice:** Confirm that `antigravity_context.txt` has been created/updated with raw error context and is ready to be sent to **Qwen** to determine the root cause and generate the plan.

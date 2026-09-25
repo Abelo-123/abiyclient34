@@ -38,7 +38,7 @@ export function PhoneVerification() {
         setIsLoading(true);
         try {
             const initData = await getInitDataString();
-            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com'}/otp/send`, {
+            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://abiyback-ldrf.onrender.com'}/otp/send`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ initData, phone_number: formattedPhone })
@@ -66,7 +66,7 @@ export function PhoneVerification() {
         setIsLoading(true);
         try {
             const initData = await getInitDataString();
-            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com'}/otp/verify`, {
+            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://abiyback-ldrf.onrender.com'}/otp/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ initData, phone_number: phoneNumber, otp })
@@ -97,19 +97,19 @@ export function PhoneVerification() {
             {step === 'input' && (
                 <div className="verification-step">
                     <div className="verification-header">📱 Verify your Phone Number</div>
-                    <Input 
+                    <Input
                         type="tel"
                         placeholder="e.g. 251911234567"
                         value={phoneNumber}
                         onChange={(e: any) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
                         className="verification-input"
                     />
-                    <Button 
-                        size="m" 
-                        stretched 
-                        onClick={handleSendOTP} 
+                    <Button
+                        size="m"
+                        stretched
+                        onClick={handleSendOTP}
                         loading={isLoading}
-                        style={{ 
+                        style={{
                             marginTop: '10px',
                             background: 'var(--accent-primary, #7c5cfc)',
                             color: '#ffffff',
@@ -124,7 +124,7 @@ export function PhoneVerification() {
             {step === 'verify' && (
                 <div className="verification-step">
                     <div className="verification-header">Enter the 4-digit OTP sent to {phoneNumber}</div>
-                    <Input 
+                    <Input
                         type="number"
                         placeholder="Enter OTP"
                         value={otp}
@@ -132,10 +132,10 @@ export function PhoneVerification() {
                         className="verification-input"
                     />
                     <div style={{ marginTop: '10px' }}>
-                        <Button 
-                            size="m" 
-                            stretched 
-                            onClick={handleVerifyOTP} 
+                        <Button
+                            size="m"
+                            stretched
+                            onClick={handleVerifyOTP}
                             loading={isLoading}
                             style={{
                                 background: 'var(--accent-primary, #7c5cfc)',

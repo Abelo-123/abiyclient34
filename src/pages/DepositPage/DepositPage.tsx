@@ -18,7 +18,7 @@ import './DepositPage.css';
 
 
 const PRESET_AMOUNTS = [10, 100, 1000, 10000];
-const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com';
+const NODE_API_URL = import.meta.env.VITE_NODE_API_URL || 'https://abiyback-ldrf.onrender.com';
 
 type DepositStep = 'amount' | 'verifying' | 'success' | 'error';
 
@@ -238,8 +238,8 @@ export function DepositPage() {
             } else {
                 let errorMsg = 'Failed to initialize redirect payment';
                 if (backendData.error) {
-                    errorMsg = typeof backendData.error === 'string' 
-                        ? backendData.error 
+                    errorMsg = typeof backendData.error === 'string'
+                        ? backendData.error
                         : JSON.stringify(backendData.error);
                 }
                 showToast('error', errorMsg);

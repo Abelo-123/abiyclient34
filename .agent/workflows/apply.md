@@ -14,7 +14,7 @@ When the user runs this workflow:
    - Verify syntax, types, and imports are fully intact.
    - If database migrations or SQL scripts are included, apply them if local, or provide the exact queries to run.
 
-3. **Phase 3 — Fix Summary, Precise Git Commands & .ENV Handoff:**
+3. . **Phase 3 — Fix Summary, Precise Git Commands & .ENV Handoff:**
    - **DO NOT automatically run `git push`.**
    - In the chat response, output the following sections:
 
@@ -24,9 +24,16 @@ When the user runs this workflow:
         - What specific changes were applied to fix it across the affected services/database.
         - Any side effects or edge cases guarded against.
 
-     2. **Manual Git Commands (Custom Remotes & Specific Files):**
-        For every service folder modified, output the exact terminal commands following these strict rules:
-        - **Targeted `git add`:** Do NOT use `git add .`. List ONLY the specific file paths that were modified or created in that service.
+     2. **Manual Git Commands (Strict Path Isolation & Explicit Files Only):**
+        To completely prevent staging entire folders or leaking files from one service into another, output the exact terminal commands following these strict isolation rules:
+        
+        - **Service-Level Isolation:** Every service must be handled in an independent command block. Never stage files across multiple services in a single command block.
+        - **Exact Directory Navigation:** Always `cd` into the exact local directory of the service first.
+        - **Strictly Relative & Explicit Paths:**
+          * Every file passed to `git add` must be an explicit, single file path written **strictly relative to the service root** (the folder you just `cd`'d into).
+          * **ABSOLUTELY FORBIDDEN:** Never output `git add .`, `git add -A`, `git add *`, or directory-level staging like `git add src/` or `git add app/`.
+          * Do NOT use workspace-root relative paths inside a service repository.
+        - **Staging Verification Step:** Include `git diff --name-only --cached` after `git add` so the user can verify that ONLY the intended files were staged before committing.
         - **Custom Remotes:** Use the service-specific remote name (NOT `origin`):
           * Client Front-end: `client-front`
           * Client Back-end:  `client-back`
@@ -35,11 +42,15 @@ When the user runs this workflow:
           * Bot Server:       `bot-server` (or corresponding remote from Master KI)
         - **Target Branch:** Always target the `master` branch.
 
-        Format for each modified service:
+        Format to output for EACH modified service:
         ```bash
-        cd <local-path-to-service>
-        git status
-        git add <path/to/changed_file_1> <path/to/changed_file_2>
+        # --- [PLATFORM NAME] ---
+        cd <exact-local-path-to-service>
+        git status -s
+        # Stage ONLY the exact modified/created files relative to this directory:
+        git add path/to/exact_file_1.ext path/to/exact_file_2.ext
+        # Verify that ONLY the intended files are staged (no accidental files):
+        git diff --name-only --cached
         git commit -m "fix: [issue summary] - applied architecture plan"
         git push <remote-name> master
         ```
@@ -57,7 +68,6 @@ When the user runs this workflow:
      3. If a specific API endpoint or bot action was fixed, run a test request against the live Render URL to confirm the fix works in production.
 
 5. **Phase 5 — Cleanup & Final Report:**
-   - Delete `antigravity_context.txt` AND `plan.txt` (if present) from the workspace root.
    - Provide a final summary in the chat:
      * **Files Modified:** (Grouped by service)
      * **Live Verification Results:** (Render URL health check status and API test response)

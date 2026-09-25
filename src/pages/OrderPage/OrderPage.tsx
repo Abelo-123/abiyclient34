@@ -22,7 +22,7 @@ export function OrderPage() {
     const [showCategoryModal, setShowCategoryModal] = useState(false);
     const [showServiceModal, setShowServiceModal] = useState(false);
     const [showVerifyModal, setShowVerifyModal] = useState(false);
-    
+
     const [link, setLink] = useState('');
     const [quantity, setQuantity] = useState('');
     const [comments, setComments] = useState('');
@@ -85,7 +85,7 @@ export function OrderPage() {
 
         // 2. Input Security
         const q = effectiveQuantity;
-        
+
         if (!link.trim()) {
             showToast('error', 'Missing Link: Please enter the link or username for this order.');
             return hapticNotification('error');
@@ -134,7 +134,7 @@ export function OrderPage() {
 
         try {
             const initData = await getInitDataString();
-            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://abiyback.onrender.com'}/orders/place`, {
+            const res = await fetch(`${import.meta.env.VITE_NODE_API_URL || 'https://abiyback-ldrf.onrender.com'}/orders/place`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -151,7 +151,7 @@ export function OrderPage() {
             if (data.success) {
                 hapticNotification('success');
                 showToast('success', 'Order placed successfully!');
-                
+
                 if (data.new_balance !== undefined) {
                     setBalance(data.new_balance);
                 } else if (user) {
@@ -170,7 +170,7 @@ export function OrderPage() {
                 setComments('');
                 setAnswerNumber('');
                 setSelectedService(null);
-                
+
                 if ('refreshUser' in appContext && typeof (appContext as any).refreshUser === 'function') {
                     (appContext as any).refreshUser();
                 }
@@ -221,7 +221,7 @@ export function OrderPage() {
     return (
         <div className="order-page-wrapper">
             <NewsTicker />
-            
+
             {/* ─── Currently Active Promotion Banner (Paxyo / Ziviop Style) ─── */}
             {discountPercent > 0 && (
                 <div style={{
@@ -317,7 +317,7 @@ export function OrderPage() {
                     </div>
                 </div>
             )}
-            
+
             {/* ─── Phone Verification Banner ─── */}
             {!user?.phone_verified && (
                 <div style={{
@@ -418,14 +418,14 @@ export function OrderPage() {
                             import('../../helpers/telegram').then(m => m.hapticNotification('error'));
                         }
                     }}
-                    after={selectedCategory 
-                        ? <span style={{color: 'var(--color-success)', fontWeight: 'bold'}}>✓</span> 
+                    after={selectedCategory
+                        ? <span style={{ color: 'var(--color-success)', fontWeight: 'bold' }}>✓</span>
                         : <span style={{ color: 'var(--tg-theme-hint-color)' }}>{'>'}</span>
                     }
                 >
                     <span style={{ fontWeight: selectedCategory ? 600 : 400 }}>Category</span>
                 </Cell>
-                
+
                 <div style={{ height: '0.5px', background: 'var(--tg-theme-section-separator-color)', marginLeft: '16px' }} />
 
                 <Cell
@@ -434,8 +434,8 @@ export function OrderPage() {
                     onClick={() => {
                         if (selectedCategory) setShowServiceModal(true);
                     }}
-                    after={selectedService 
-                        ? <span style={{color: 'var(--color-success)', fontWeight: 'bold'}}>✓</span> 
+                    after={selectedService
+                        ? <span style={{ color: 'var(--color-success)', fontWeight: 'bold' }}>✓</span>
                         : <span style={{ color: 'var(--tg-theme-hint-color)' }}>{'>'}</span>
                     }
                 >
@@ -468,11 +468,11 @@ export function OrderPage() {
 
                     <div className="order-input-group">
                         <label>{reqs.labelLink}</label>
-                        <input 
-                            type="text" 
-                            placeholder={reqs.placeholderLink} 
-                            value={link} 
-                            onChange={(e) => setLink(e.target.value)} 
+                        <input
+                            type="text"
+                            placeholder={reqs.placeholderLink}
+                            value={link}
+                            onChange={(e) => setLink(e.target.value)}
                             className="order-custom-input"
                         />
                     </div>
@@ -480,10 +480,10 @@ export function OrderPage() {
                     {showComments && (
                         <div className="order-input-group">
                             <label>{reqs.labelExtra || 'Comments (One per line)'} • <span style={{ color: 'var(--color-accent)' }}>{effectiveQuantity} entered</span></label>
-                            <textarea 
+                            <textarea
                                 placeholder={reqs.placeholderExtra || "Enter comments here...\nGood post!\nAmazing!\nLove this!"}
-                                value={comments} 
-                                onChange={(e) => setComments(e.target.value)} 
+                                value={comments}
+                                onChange={(e) => setComments(e.target.value)}
                                 rows={5}
                                 style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--tg-theme-secondary-bg-color, #252542)', color: 'var(--tg-theme-text-color)', border: '1px solid var(--border-input, rgba(255,255,255,0.1))', outline: 'none', fontSize: '14px', resize: 'vertical' }}
                             />
@@ -496,11 +496,11 @@ export function OrderPage() {
                     {showCommentOwner && (
                         <div className="order-input-group">
                             <label>{reqs.labelExtra || 'Username of the Comment Owner'}</label>
-                            <input 
-                                type="text" 
-                                placeholder={reqs.placeholderExtra || "e.g. @username or username"} 
-                                value={comments} 
-                                onChange={(e) => setComments(e.target.value)} 
+                            <input
+                                type="text"
+                                placeholder={reqs.placeholderExtra || "e.g. @username or username"}
+                                value={comments}
+                                onChange={(e) => setComments(e.target.value)}
                                 className="order-custom-input"
                             />
                         </div>
@@ -509,11 +509,11 @@ export function OrderPage() {
                     {showPoll && (
                         <div className="order-input-group">
                             <label>{reqs.labelExtra || 'Poll Option / Answer Number'}</label>
-                            <input 
-                                type="number" 
-                                placeholder={reqs.placeholderExtra || "e.g. 1 (for first option), 2 (for second option)"} 
-                                value={answerNumber} 
-                                onChange={(e) => setAnswerNumber(e.target.value.replace(/\D/g, ''))} 
+                            <input
+                                type="number"
+                                placeholder={reqs.placeholderExtra || "e.g. 1 (for first option), 2 (for second option)"}
+                                value={answerNumber}
+                                onChange={(e) => setAnswerNumber(e.target.value.replace(/\D/g, ''))}
                                 className="order-custom-input"
                             />
                         </div>
@@ -531,12 +531,12 @@ export function OrderPage() {
                     {showQuantity && (
                         <div className="order-input-group">
                             <label>Quantity</label>
-                            <input 
-                                type="number" 
+                            <input
+                                type="number"
                                 inputMode="numeric"
-                                placeholder={`${selectedService.min} - ${selectedService.max}`} 
-                                value={quantity} 
-                                onChange={(e) => setQuantity(e.target.value.replace(/\D/g, ''))} 
+                                placeholder={`${selectedService.min} - ${selectedService.max}`}
+                                value={quantity}
+                                onChange={(e) => setQuantity(e.target.value.replace(/\D/g, ''))}
                                 className="order-custom-input"
                             />
                         </div>
@@ -556,7 +556,7 @@ export function OrderPage() {
                         loading={isSubmitting}
                         disabled={isSubmitting}
                         className={isFirstOrder ? 'order-btn-pulse' : ''}
-                        style={{ 
+                        style={{
                             background: 'var(--tg-theme-button-color)',
                             color: 'var(--tg-theme-button-text-color)',
                             fontWeight: 700,
